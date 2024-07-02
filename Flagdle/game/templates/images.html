@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Images</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images Gallery</title>
+    <link rel="stylesheet" href="css/styles.css"> <!-- Link to your CSS file -->
 </head>
 <body>
-    <h1>Images</h1>
+    <h1>Images Gallery</h1>
     {% load static %}
 
     <form method="get" action="">
@@ -16,10 +19,10 @@
         </select>
     </form>
 
-    <div>
+    <div class="image-container">
         {% for image, filename in images %}
-            <div style="display: inline-block; margin: 10px; text-align: center;">
-                <img src="{% static image %}" alt="{{ filename }}" style="max-width: 200px; max-height: 200px;"><br>
+            <div class="image-item">
+                <img src="{% static image %}" alt="{{ filename }}">
                 <span>{{ filename }}</span>
             </div>
         {% endfor %}
