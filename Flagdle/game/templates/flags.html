@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Images</title>
+</head>
+<body>
+    <h1>Images</h1>
+    {% load static %}
+    <div>
+        {% for image, filename in images %}
+            <div style="display: inline-block; margin: 10px; text-align: center;">
+                <img src="{% static image %}" alt="{{ filename }}" style="max-width: 200px; max-height: 200px;"><br>
+                <span>{{ filename }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

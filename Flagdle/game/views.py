@@ -2,10 +2,10 @@ from django.shortcuts import render
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSETS_DIR = os.path.join(BASE_DIR, 'assets/country')
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
 def get_images_from_directory(directory):
-    directory_path = os.path.join(ASSETS_DIR, directory)
+    directory_path = os.path.join(ASSETS_DIR, 'country', directory)
     images = []
     if os.path.exists(directory_path):
         for filename in os.listdir(directory_path):
@@ -22,3 +22,11 @@ def images_view(request):
         'categories': categories,
         'selected_category': selected_category
     })
+
+def fullname_view(request):
+    directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
+    images = []
+    for filename in os.listdir(directory_path):
+        if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            images.append((os.path.join('flags', 'fullname', filename), filename))
+    return render(request, 'flags.html', {'images': images})
