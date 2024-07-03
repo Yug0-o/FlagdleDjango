@@ -13,6 +13,7 @@ def get_images_from_directory(directory):
                 images.append((os.path.join('country', directory, filename), filename))
     return images
 
+# Country view available in-game
 def images_view(request):
     categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
     selected_category = request.GET.get('category', categories[0])
