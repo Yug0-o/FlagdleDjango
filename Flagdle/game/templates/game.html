@@ -2,12 +2,11 @@
 <html>
 <head>
     <title>Image Guessing Game</title>
-    <link rel="stylesheet" type="text/css" href='templates/css/style.css'>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
 </head>
 <body>
     <h1>Image Guessing Game</h1>
-    {% load static %}
-
 
     <form method="get" action="">
         <label for="category">Choose a category:</label>

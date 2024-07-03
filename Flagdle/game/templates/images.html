@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Images Gallery</title>
-    <link rel="stylesheet" href="templates/css/style.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'game/images.css' %}">
 </head>
 <body>
     <h1>Images</h1>
-    {% load static %}
 
     <form method="get" action="">
         <label for="category">Choose a category:</label>

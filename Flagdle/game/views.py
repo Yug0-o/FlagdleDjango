@@ -5,6 +5,11 @@ import random
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
+# Homepage
+def home_view(request):
+    categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+    return render(request, 'homepage.html', {'categories': categories})
+
 def get_images_from_directory(directory):
     directory_path = os.path.join(ASSETS_DIR, 'country', directory)
     images = []

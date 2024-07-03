@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
-from game.views import images_view, fullname_view, game_view
+from game.views import images_view, fullname_view, game_view, home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Flagdle/login/', TokenObtainPairView.as_view(), name='login'),
+    path('Flagdle/', home_view, name='home'),
     path('Flagdle/countries/', images_view, name='countries'),
     path('Flagdle/flags/', fullname_view, name='flags'),
     path('Flagdle/game/', game_view, name='game'),
