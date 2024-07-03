@@ -16,7 +16,8 @@ def get_images_from_directory(directory):
     if os.path.exists(directory_path):
         for filename in os.listdir(directory_path):
             if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                images.append((os.path.join('country', directory, filename), filename))
+                filename_without_extension = os.path.splitext(filename)[0]
+                images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
 
 # Country view available in-game
@@ -36,7 +37,8 @@ def fullname_view(request):
     images = []
     for filename in os.listdir(directory_path):
         if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
-            images.append((os.path.join('flags', 'fullname', filename), filename))
+            filename_without_extension = os.path.splitext(filename)[0]
+            images.append((os.path.join('flags', 'fullname', filename), filename_without_extension))
     return render(request, 'flags.html', {'images': images})
 
 
