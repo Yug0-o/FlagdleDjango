@@ -57,10 +57,13 @@ def game_view(request):
         user_guess = request.POST.get('guess').strip().lower()
         correct_answer = request.POST.get('correct_answer').strip().lower()
 
-        if user_guess == correct_answer:
+        # Remove the extension from the correct answer
+        correct_answer_without_extension = os.path.splitext(correct_answer)[0]
+
+        if user_guess == correct_answer_without_extension:
             message = "Correct!"
         else:
-            message = f"Incorrect. The correct answer was {correct_answer}."
+            message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
 
         random_image = random.choice(images)
         return render(request, 'game.html', {
