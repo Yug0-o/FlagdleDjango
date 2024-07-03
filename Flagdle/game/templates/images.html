@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/styles.css"> <!-- Link to your CSS file -->
 </head>
 <body>
-    <h1>Images Gallery</h1>
+    <h1>Images</h1>
     {% load static %}
 
     <form method="get" action="">
@@ -19,9 +19,9 @@
         </select>
     </form>
 
-    <div class="image-container">
+    <div class="image-grid">
         {% for image, filename in images %}
-            <div class="image-item">
+            <div class="image-container">
                 <img src="{% static image %}" alt="{{ filename }}">
                 <span>{{ filename }}</span>
             </div>

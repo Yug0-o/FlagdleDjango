@@ -21,6 +21,6 @@ from game.views import images_view, fullname_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Flagdle/login/', TokenObtainPairView.as_view(), name='login'),
-    path('Flagdle/images/', images_view, name='images'),
-    path('Flagdle/fullname/', fullname_view, name='fullname'),
+    path('Flagdle/countries/', images_view, name='countries'),
+    path('Flagdle/flags/', fullname_view, name='flags'),
 ]
