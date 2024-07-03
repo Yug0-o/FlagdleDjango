@@ -23,6 +23,7 @@ def images_view(request):
         'selected_category': selected_category
     })
 
+# Flag view available in-game
 def fullname_view(request):
     directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
     images = []
