@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Guessing Game - Home</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'game/homepage.css' %}">
@@ -14,6 +16,9 @@
                 <button type="submit">{{ category }}</button>
             </form>
         {% endfor %}
+        <form action="/Flagdle/flags/" method="get">
+            <button type="submit">Encyclopédie des drapeaux</button>
+        </form>
     </div>
 </body>
 </html>
