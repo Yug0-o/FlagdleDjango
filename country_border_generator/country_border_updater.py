@@ -1,4 +1,5 @@
 import cartopy.crs as ccrs
+import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import os
@@ -9,15 +10,19 @@ print("\n🔄 Loading country data...")
 World_gdf = gpd.read_file('country_border_generator/custom.geojson')
 country_folder = "Flagdle/assets/country"
 
+# list continents in country_folder
+continents = gtop.continents
+
 # retrieve the languages from the GeoDataFrame
 languages = [col.split('_')[1] for col in World_gdf.columns if col.startswith('name_')]
 
-def CountryName_to_png(country_name:str, save_path=''):
+def CountryName_to_png(country_name:str, save_path='', gdf=World_gdf):
     """
     Given a <country_name>, create an image of the country centered on the country's centroid.\n
     If <save_path> is specified, save the image to the path.
     Else, display the image.
     """
+    print(f"\n🔄 Searching for '{country_name}'...")
     country_gdf, country_name = gtop.filter_country_gdf(World_gdf, country_name)
 
     if country_name == False:
@@ -28,11 +33,11 @@ def CountryName_to_png(country_name:str, save_path=''):
         print("Country not found.")
         return False
 
-    if save_path == '': print(f"🔄 Plotting {country_name}...\n")
+    if save_path == '': print(f"\n🔄 Plotting {country_name}...\n")
 
     projection, (minx, maxx, miny, maxy), (central_longitude, central_latitude) = gtop.create_projection(country_gdf)
 
-    print(f"❕ Center coordinates of {country_name}: {central_longitude}, {central_latitude}")
+    print(f"\n❕ Center coordinates of {country_name}: {central_longitude:2f}, {central_latitude:2f}")
     
     fig = plt.figure(figsize=(7, 7))
     ax = fig.add_subplot(1, 1, 1, projection=projection)
@@ -67,7 +72,7 @@ def print_country_names(language:str):
     """
     for name in sorted(World_gdf[f'name_{language}']):
         print(f"\t- {name}")
-    
+
 def auto_update_countries(country_folder:str):
     """
     Given a country folder, update the country borders of the images in the folder.
@@ -81,10 +86,14 @@ def auto_update_countries(country_folder:str):
         
         for image in os.listdir(os.path.join(country_folder, folder)):
             country_name = image.split(".")[0]
-            save_path = os.path.join(country_folder, folder, image)
+            
             
             print(f"\n🔄 Updating {country_name}...")
-
+            if country_name == "icon":
+                country_name = folder
+                image = "icon.png"
+                
+            save_path = os.path.join(country_folder, folder, image)
             if CountryName_to_png(country_name, save_path):
                 print(f"✅ Updated {country_name}")
             else :

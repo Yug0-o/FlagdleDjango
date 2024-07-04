@@ -1,3 +1,11 @@
+from unidecode import unidecode
+import geopandas as gpd
+import pandas as pd
+import os
+
+country_folder = "Flagdle/assets/country"
+continents = os.listdir(country_folder)
+
 def create_projection(country_gdf, padding=0.05):
     """
     Create an Orthographic projection centered on the country's centroid
@@ -13,10 +21,12 @@ def create_projection(country_gdf, padding=0.05):
     """
     import cartopy.crs as ccrs
     country_shape = country_gdf.dissolve()
+    country_shape = gpd.GeoSeries(country_shape.geometry.unary_union)
     center = country_shape.geometry.centroid.iloc[0]
     central_longitude, central_latitude = center.x, center.y
 
     minx, miny, maxx, maxy = country_gdf.geometry.total_bounds
+    print(f"\n❕ Extent :\n\tminX : {minx:.2f}\n\tmaxX : {maxx:.2f}\n\tminY : {miny:.2f}\n\tmaxY : {maxy:.2f}")
     
     # Calculate padding based on the size of the country
     x_padding = (maxx - minx) * padding
@@ -27,6 +37,15 @@ def create_projection(country_gdf, padding=0.05):
     miny -= y_padding
     maxx += x_padding
     maxy += y_padding
+
+    minx = max(minx,-180)
+    miny = max(miny,-90)
+    maxx = min(maxx, 180)
+    maxy = min(maxy, 90)
+
+    # central_latitude = (miny + maxy) / 2
+
+    print(f"\n❕ Padded Extent :\n\tminX : {minx:.2f}\n\tmaxX : {maxx:.2f}\n\tminY : {miny:.2f}\n\tmaxY : {maxy:.2f}")
 
     projection = ccrs.Orthographic(central_longitude=central_longitude, central_latitude=central_latitude)
     
@@ -44,9 +63,29 @@ def filter_country_gdf(local_gdf, country_name:str, laguage='en'):
     - A tuple containing the filtered GeoDataFrame containing only the specified country's data
       and the full name of the country.
     """
-    from unidecode import unidecode
     if country_name == '':
         return False, False
+
+    if country_name in continents:
+        print(f"🔄 Listing all countries in {country_name}")
+        world_gdf = local_gdf
+        continent_name = country_name
+        # loop through the countries of each continent in country_path
+        continent_gdf = []
+        for country in os.listdir(f"{country_folder}/{continent_name}"):
+            if country == "icon.png":
+                continue
+            # add each country's gdf to the continent_gdf
+            country_gdf, country_full_name = filter_country_gdf(world_gdf, country.split('.')[0])
+            if country_full_name != False:
+                print(f"\t- Adding {country_full_name} to {continent_name}...")
+                continent_gdf.append(country_gdf)
+            else:
+                print(f"\t-❌ {country} not found in the world")
+
+        continent_gdf = gpd.GeoDataFrame(pd.concat(continent_gdf, ignore_index=True))
+
+        return continent_gdf, continent_name
     try:
         country_input = unidecode(country_name.lower())  # Normalize input name
         
@@ -70,3 +109,9 @@ def filter_country_gdf(local_gdf, country_name:str, laguage='en'):
         return filtered_gdf, full_name
     except:
         return False, False
+
+"""
+❌ Failed to update:
+        - Amerique > Les Bahamas
+        - Europe > Republique Tchèque
+"""
