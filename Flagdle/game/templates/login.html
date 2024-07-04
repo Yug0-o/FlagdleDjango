@@ -5,7 +5,7 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
 </head>
-<body>
+<body class="light-theme">
     <h1>Login</h1>
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}

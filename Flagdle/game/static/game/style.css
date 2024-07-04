@@ -1,15 +1,62 @@
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 500;
+    src: url(fonts/GothamSSm-Medium_Web.woff2) format("woff2")
+}
+
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/GothamSSm-Book_Web.woff2) format("woff2")
+}
+
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 300;
+    src: url(fonts/GothamSSm-Light_Web.woff2) format("woff2")
+}
+
+.dark-theme {
+    --background-color: oklch(18.88% 0.004 308.21);
+    --text-color: oklch(99.11% 0 0);
+    --inverted-text-color: oklch(21.34% 0 0);
+    --acent-color: oklch(65% 0.162 144);
+    --acent-hover-color: oklch(75% 0.152 144);
+    --secondary-color: oklch(61.92% 0.169 25.05);
+    --image-container-background: oklch(22.32% 0.01 276.61);
+}
+
+.light-theme {
+    --background-color: oklch(92.9% 0.002 325.59);
+    --text-color: oklch(21.34% 0 0);
+    --inverted-text-color: oklch(99.11% 0 0);
+    --acent-color: oklch(75% 0.162 144);
+    --acent-hover-color: oklch(80% 0.152 144);
+    --secondary-color: oklch(61.92% 0.169 25.05);
+    --image-container-background: oklch(93.13% 0.001 286.37);
+}
+
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: Gotham SSm;
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    user-select: none;
 }
 
 h1 {
-    color: #333;
+    color: var(--text-color);
     margin-top: 20px;
 }
 
@@ -29,14 +76,21 @@ select {
 
 .image-grid {
     display: flex;
+    padding-inline: 10vw;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
 }
 
 .image-container {
-    background-color: #fff;
-    border-radius: 8px;
+    display: flex;
+    background-color: var(--image-container-background);
+    margin-top: 20px;
+    max-width: 200px;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s;
@@ -56,14 +110,9 @@ select {
     display: block;
     padding: 10px;
     text-align: center;
-    background-color: #fff;
+    background-color: var(--image-container-background);
     font-weight: bold;
-    color: #555;
-}
-
-.image-container {
-    margin-top: 20px;
-    text-align: center;
+    color: var(--text-color);
 }
 
 input[type="text"] {
@@ -74,34 +123,22 @@ input[type="text"] {
 
 button {
     padding: 5px 10px;
-    font-size: 16px;
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
     cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--acent-color);
+    color: var(--inverted-text-color);
     border: none;
-    border-radius: 4px;
+    border-radius: 15px;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--acent-hover-color);
 }
 
 p {
     font-size: 18px;
-    color: #d9534f;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50; /* Green */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
+    color: var(--secondary-color);
 }
