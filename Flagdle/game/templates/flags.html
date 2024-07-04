@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>World Flags Gallery</h1>
+    <button onclick="location.href='{% url 'home' %}'">Home</button>
     <div class="flag-container">
         {% for image, filename in images %}
             <div class="flag-item">

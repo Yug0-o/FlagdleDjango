@@ -15,14 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView
-from game.views import images_view, fullname_view, game_view, home_view
+from django.contrib.auth import views as auth_views
+from game.views import HomeView, ImagesView, FullnameView, GameView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Flagdle/login/', TokenObtainPairView.as_view(), name='login'),
-    path('Flagdle/', home_view, name='home'),
-    path('Flagdle/countries/', images_view, name='countries'),
-    path('Flagdle/flags/', fullname_view, name='flags'),
-    path('Flagdle/game/', game_view, name='game'),
+    path('Flagdle/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('Flagdle/logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('Flagdle/', HomeView.as_view(), name='home'),
+    path('Flagdle/countries/', ImagesView.as_view(), name='countries'),
+    path('Flagdle/flags/', FullnameView.as_view(), name='flags'),
+    path('Flagdle/game/', GameView.as_view(), name='game'),
 ]

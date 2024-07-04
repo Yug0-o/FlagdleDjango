@@ -1,14 +1,28 @@
-from django.shortcuts import render
 import os
 import random
+
+from django.views.generic import TemplateView, FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django import forms
+
+from .forms import GuessForm
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
-# Homepage
-def home_view(request):
-    categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-    return render(request, 'homepage.html', {'categories': categories})
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'homepage.html'
+    login_url = 'login'  # URL to redirect if the user is not logged in
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        return context
+
 
 def get_images_from_directory(directory):
     directory_path = os.path.join(ASSETS_DIR, 'country', directory)
@@ -20,46 +34,64 @@ def get_images_from_directory(directory):
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
 
-# Country view available in-game
-def images_view(request):
-    categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-    selected_category = request.GET.get('category', categories[0])
-    images = get_images_from_directory(selected_category)
-    return render(request, 'images.html', {
-        'images': images,
-        'categories': categories,
-        'selected_category': selected_category
-    })
+class ImagesView(LoginRequiredMixin, TemplateView):
+    template_name = 'images.html'
+    login_url = 'login'  # URL to redirect if the user is not logged in
 
-# Flag view available in-game
-def fullname_view(request):
-    directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
-    images = []
-    for filename in os.listdir(directory_path):
-        if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
-            filename_without_extension = os.path.splitext(filename)[0]
-            images.append((os.path.join('flags', 'fullname', filename), filename_without_extension))
-    return render(request, 'flags.html', {'images': images})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categories[0])
+        context['images'] = get_images_from_directory(selected_category)
+        context['categories'] = categories
+        context['selected_category'] = selected_category
+        return context
 
 
-def game_view(request):
-    categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-    selected_category = request.GET.get('category', categories[0])
-    images = get_images_from_directory(selected_category)
+class FullnameView(LoginRequiredMixin, TemplateView):
+    template_name = 'flags.html'
+    login_url = 'login'  # URL to redirect if the user is not logged in
 
-    if not images:
-        return render(request, 'game.html', {
-            'categories': categories,
-            'selected_category': selected_category,
-            'message': 'No images found in this category.'
-        })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
+        images = []
+        for filename in os.listdir(directory_path):
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                filename_without_extension = os.path.splitext(filename)[0]
+                images.append((os.path.join('flags', 'fullname', filename), filename_without_extension))
+        context['images'] = images
+        return context
 
-    if request.method == 'POST':
-        current_image = request.POST.get('current_image')
-        user_guess = request.POST.get('guess').strip().lower()
-        correct_answer = request.POST.get('correct_answer').strip().lower()
 
-        # Remove the extension from the correct answer
+class GameView(LoginRequiredMixin, FormView):
+    template_name = 'game.html'
+    login_url = 'login'  # URL to redirect if the user is not logged in
+    form_class = GuessForm
+    success_url = reverse_lazy('game')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categories[0])
+        images = get_images_from_directory(selected_category)
+
+        if not images:
+            context['message'] = 'No images found in this category.'
+        else:
+            context['categories'] = categories
+            context['selected_category'] = selected_category
+            context['images'] = images
+            random_image = random.choice(images)
+            context['current_image'] = random_image[0]
+            context['correct_answer'] = random_image[1]
+
+        return context
+
+    def form_valid(self, form):
+        current_image = form.cleaned_data['current_image']
+        user_guess = form.cleaned_data['guess'].strip().lower()
+        correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
         if user_guess == correct_answer_without_extension:
@@ -67,19 +99,16 @@ def game_view(request):
         else:
             message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
 
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categories[0])
+        images = get_images_from_directory(selected_category)
         random_image = random.choice(images)
-        return render(request, 'game.html', {
-            'categories': categories,
-            'selected_category': selected_category,
-            'current_image': random_image[0],
-            'correct_answer': random_image[1],
-            'message': message
-        })
 
-    random_image = random.choice(images)
-    return render(request, 'game.html', {
-        'categories': categories,
-        'selected_category': selected_category,
-        'current_image': random_image[0],
-        'correct_answer': random_image[1]
-    })
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            categories=categories,
+            selected_category=selected_category,
+            current_image=random_image[0],
+            correct_answer=random_image[1],
+            message=message
+        ))
