@@ -100,7 +100,7 @@ form button:active {
     background-color: var(--error-color);
 }
 
-button {
+button:not(#theme-switcher) {
     width: auto;
     padding: 10px 20px;
     color: var(--inverted-text-color);
