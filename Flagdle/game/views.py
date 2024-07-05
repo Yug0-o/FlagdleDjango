@@ -29,7 +29,7 @@ def get_images_from_directory(directory):
     images = []
     if os.path.exists(directory_path):
         for filename in os.listdir(directory_path):
-            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')) and 'icon' not in filename:
                 filename_without_extension = os.path.splitext(filename)[0]
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
