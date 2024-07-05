@@ -51,7 +51,7 @@
     --container-border: oklch(40% 0 0);
     --box-shadow: 0px 5px 10px oklch(13% 0.004 308.21 / 20%);
     --hover-box-shadow: 0px 10px 20px oklch(13% 0.004 308.21 / 20%);
-    --active-box-shadow: 0px 0px 0px oklch(13% 0.004 308.21 / 10%);
+    --active-box-shadow: none;
 }
 
 *::-webkit-scrollbar {
