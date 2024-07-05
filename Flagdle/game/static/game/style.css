@@ -32,7 +32,7 @@
     --secondary-color: oklch(55% 0.169 25);
     --container-background: oklch(13.8% 0.031 281.56);
     --container-text-color: oklch(99.8% 0.031 281.56);
-    --container-border: oklch(70.58% 0 0);
+    --container-border: oklch(40% 0 0);
     --box-shadow: none;
     --hover-box-shadow: none;
     --active-box-shadow: none;
@@ -48,7 +48,7 @@
     --secondary-color: oklch(62% 0.169 25);
     --container-background: oklch(13.8% 0.031 281.56);
     --container-text-color: oklch(90.8% 0.031 281.56);
-    --container-border: oklch(70.58% 0 0);
+    --container-border: oklch(40% 0 0);
     --box-shadow: 0px 5px 10px oklch(13% 0.004 308.21 / 20%);
     --hover-box-shadow: 0px 10px 20px oklch(13% 0.004 308.21 / 20%);
     --active-box-shadow: 0px 0px 0px oklch(13% 0.004 308.21 / 10%);
