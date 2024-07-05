@@ -1,0 +1,6 @@
+- LOGO Flagdle qui renvoie à la page d'accueil
+- Bouton pour changer de thème
+- Éviter le rechargement de la page à chaque devinette
+- Rendre les images plus grandes
+- Éviter qu'un pays ne revienne plusieurs fois
+- Obfusquer les noms des images des pays pour éviter la triche
