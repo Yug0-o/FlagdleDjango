@@ -1,63 +1,173 @@
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 500;
+    src: url(fonts/GothamSSm-Medium_Web.woff2) format("woff2")
+}
+
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/GothamSSm-Book_Web.woff2) format("woff2")
+}
+
+@font-face {
+    font-display: swap;
+    font-family: Gotham SSm;
+    font-style: normal;
+    font-weight: 300;
+    src: url(fonts/GothamSSm-Light_Web.woff2) format("woff2")
+}
+
+
+.dark-theme {
+    --background-color: oklch(15% 0.004 308.21);
+    --text-color: oklch(99% 0 0);
+    --text-secondary-color: oklch(89% 0 0);
+    --inverted-text-color: oklch(20% 0 0);
+    --acent-color: oklch(50% 0.162 144);
+    --acent-hover-color: oklch(55% 0.152 144);
+    --secondary-color: oklch(55% 0.169 25);
+    --container-background: oklch(20% 0.01 276.61);
+    --container-border: var(--container-background);
+    --box-shadow: none;
+    --hover-box-shadow: none;
+    --active-box-shadow: none;
+}
+
+.light-theme {
+    --background-color: oklch(95% 0.002 325.59);
+    --text-color: oklch(15% 0 0);
+    --text-secondary-color: oklch(25% 0 0);
+    --inverted-text-color: oklch(90% 0 0);
+    --acent-color: oklch(75% 0.162 144);
+    --acent-hover-color: oklch(80% 0.152 144);
+    --secondary-color: oklch(62% 0.169 25);
+    --container-background: oklch(95% 0.01 286.37);
+    --container-border: oklch(90% 0.01 286.37);
+    --box-shadow: 0px 4px 8px oklch(13% 0.004 308.21 / 20%);
+    --hover-box-shadow: 0px 8px 16px oklch(13% 0.004 308.21 / 20%);
+    --active-box-shadow: 0px 0px 0px oklch(13% 0.004 308.21 / 10%);
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 /* Reset styles */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.5s cubic-bezier(.19, 1, .22, 1);
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+    user-select: none;
 }
 
 /* Basic styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: Gotham SSm, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: var(--text-secondary-color);
     margin-bottom: 20px;
 }
 
 .flag-container {
     display: flex;
+    padding-inline: 10vw;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .flag-item {
+    display: flex;
     text-align: center;
-    margin: 10px;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    width: 200px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--container-background);
+    margin-top: 20px;
+    max-width: 150px;
+    height: fit-content;
+    border-radius: 20px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+}
+
+.flag-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-box-shadow);
 }
 
 .flag-item img {
     max-width: 100%;
     max-height: 150px;
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
 .flag-item span {
     display: block;
     margin-top: 5px;
-    font-size: 14px;
-    color: #666;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    color: var(--text-secondary-color);
+    user-select: text;
 }
 
 button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50; /* Green */
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding: 5px 10px;
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
     cursor: pointer;
+    background-color: var(--acent-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 15px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--acent-hover-color);
+}
+
+@media (max-width: 1000px){
+    .flag-container {
+        padding-inline: 5vw;
+    }
+
+    .flag-item {
+        border-radius: 10px;
+        width: 120px;
+    }
+
+    .flag-item span {
+        font-size: 1em;
+    }
+    
 }

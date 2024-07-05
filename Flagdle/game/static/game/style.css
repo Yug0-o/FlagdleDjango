@@ -23,23 +23,64 @@
 }
 
 .dark-theme {
-    --background-color: oklch(18.88% 0.004 308.21);
-    --text-color: oklch(99.11% 0 0);
-    --inverted-text-color: oklch(21.34% 0 0);
-    --acent-color: oklch(65% 0.162 144);
-    --acent-hover-color: oklch(75% 0.152 144);
-    --secondary-color: oklch(61.92% 0.169 25.05);
-    --image-container-background: oklch(22.32% 0.01 276.61);
+    --background-color: oklch(15% 0.004 308.21);
+    --text-color: oklch(99% 0 0);
+    --text-secondary-color: oklch(89% 0 0);
+    --inverted-text-color: oklch(20% 0 0);
+    --acent-color: oklch(50% 0.162 144);
+    --acent-hover-color: oklch(55% 0.152 144);
+    --secondary-color: oklch(55% 0.169 25);
+    --container-background: oklch(13.8% 0.031 281.56);
+    --container-text-color: oklch(99.8% 0.031 281.56);
+    --container-border: oklch(70.58% 0 0);
+    --box-shadow: none;
+    --hover-box-shadow: none;
+    --active-box-shadow: none;
 }
 
 .light-theme {
-    --background-color: oklch(92.9% 0.002 325.59);
-    --text-color: oklch(21.34% 0 0);
-    --inverted-text-color: oklch(99.11% 0 0);
+    --background-color: oklch(95% 0.002 325.59);
+    --text-color: oklch(15% 0 0);
+    --text-secondary-color: oklch(25% 0 0);
+    --inverted-text-color: oklch(90% 0 0);
     --acent-color: oklch(75% 0.162 144);
     --acent-hover-color: oklch(80% 0.152 144);
-    --secondary-color: oklch(61.92% 0.169 25.05);
-    --image-container-background: oklch(93.13% 0.001 286.37);
+    --secondary-color: oklch(62% 0.169 25);
+    --container-background: oklch(13.8% 0.031 281.56);
+    --container-text-color: oklch(90.8% 0.031 281.56);
+    --container-border: oklch(70.58% 0 0);
+    --box-shadow: 0px 5px 10px oklch(13% 0.004 308.21 / 20%);
+    --hover-box-shadow: 0px 10px 20px oklch(13% 0.004 308.21 / 20%);
+    --active-box-shadow: 0px 0px 0px oklch(13% 0.004 308.21 / 10%);
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Reset styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.5s cubic-bezier(.19, 1, .22, 1);
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+    user-select: none;
 }
 
 
@@ -79,30 +120,37 @@ select {
     padding-inline: 10vw;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 20px;
 }
 
 .image-container {
     display: flex;
-    background-color: var(--image-container-background);
-    margin-top: 20px;
-    max-width: 200px;
     text-align: center;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    background-color: var(--container-background);
+    color: var(--container-text-color);
+    margin-top: 20px;
+    max-width: 150px;
+    height: fit-content;
+    border: 1px solid var(--container-border);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     overflow: hidden;
-    transition: transform 0.2s;
 }
 
 .image-container:hover {
     transform: translateY(-5px);
+    scale: 1.02;
+    box-shadow: var(--hover-box-shadow);
 }
 
 .image-container img {
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 20px;
     display: block;
 }
 
@@ -110,9 +158,8 @@ select {
     display: block;
     padding: 10px;
     text-align: center;
-    background-color: var(--image-container-background);
-    font-weight: bold;
-    color: var(--text-color);
+    background-color: var(--container-background);
+    user-select: text;
 }
 
 input[type="text"] {
@@ -128,10 +175,9 @@ button {
     font-size: 20px;
     cursor: pointer;
     background-color: var(--acent-color);
-    color: var(--inverted-text-color);
+    color: var(--text-color);
     border: none;
     border-radius: 15px;
-    transition: background-color 0.3s;
 }
 
 button:hover {
@@ -141,4 +187,24 @@ button:hover {
 p {
     font-size: 18px;
     color: var(--secondary-color);
+}
+
+.clickable {
+    cursor: pointer;
+}
+.clickable:active {
+    transform: translateY(2px);
+    box-shadow: var(--active-box-shadow);
+}
+
+@media (max-width: 1000px) {
+   .image-container {
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .image-grid {
+        padding-inline: 5vw;
+    }
 }
