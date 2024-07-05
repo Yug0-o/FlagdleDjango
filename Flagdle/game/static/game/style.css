@@ -201,9 +201,7 @@ p {
    .image-container {
         max-width: 120px;
     }
-}
-
-@media (max-width: 1000px) {
+    
     .image-grid {
         padding-inline: 5vw;
     }
