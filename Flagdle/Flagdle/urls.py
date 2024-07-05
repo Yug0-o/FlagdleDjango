@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from game.views import HomeView, ImagesView, FullnameView, GameView
+from game.views import HomeView, ImagesView, FullnameView, GameView, SignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('signup/', SignUpView.as_view(), name='signup'),
     path('Flagdle/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('Flagdle/logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('Flagdle/', HomeView.as_view(), name='home'),

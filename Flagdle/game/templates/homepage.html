@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flagdle</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'game/homepage.css' %}">
-</head>
-<body class="light-theme">
+{% extends 'base.html' %}
+
+{% block title %}Protected Game{% endblock %}
+
+{% block content %}
     <h1>Welcome to Flagdle</h1>
     <div class="button-grid">
         {% for category in categories %}
@@ -23,5 +18,7 @@
             <button type="submit">Encyclopédie des pays</button>
         </form>
     </div>
-</body>
-</html>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+{% endblock %}
