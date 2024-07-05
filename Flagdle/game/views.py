@@ -1,17 +1,28 @@
 import os
 import random
 
-from django.views.generic import TemplateView, FormView
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django import forms
+from django.views.generic import CreateView
+from django.views.generic import TemplateView, FormView
 
 from .forms import GuessForm
-
+from .forms import SignUpForm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+
+
+class SignUpView(CreateView):
+    form_class = SignUpForm
+    template_name = 'signup.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
