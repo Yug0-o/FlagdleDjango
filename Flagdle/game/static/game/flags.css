@@ -156,6 +156,15 @@ button:hover {
     background-color: var(--acent-hover-color);
 }
 
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:active {
+    transform: translateY(2px);
+    box-shadow: var(--active-box-shadow);
+}
+
 @media (max-width: 1000px){
     .flag-container {
         padding-inline: 5vw;

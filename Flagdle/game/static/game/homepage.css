@@ -127,3 +127,12 @@ button:hover {
 form {
     display: inline-block;
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:active {
+    transform: translateY(2px);
+    box-shadow: var(--active-box-shadow);
+}
