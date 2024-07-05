@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Guessing Game - Home</title>
+    <title>Flagdle</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'game/homepage.css' %}">
 </head>
 <body class="light-theme">
-    <h1>Welcome to the Image Guessing Game</h1>
+    <h1>Welcome to Flagdle</h1>
     <div class="button-grid">
         {% for category in categories %}
             <form action="{% url 'game' %}" method="get">

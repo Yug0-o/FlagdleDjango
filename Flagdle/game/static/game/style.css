@@ -85,7 +85,7 @@
 
 
 body {
-    font-family: Gotham SSm;
+    font-family: Gotham SSm, Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
