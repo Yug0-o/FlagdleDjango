@@ -29,29 +29,39 @@
     --text-color: oklch(99% 0 0);
     --text-secondary-color: oklch(89% 0 0);
     --inverted-text-color: oklch(20% 0 0);
-    --acent-color: oklch(50% 0.162 144);
-    --acent-hover-color: oklch(55% 0.152 144);
+    --acent-color: oklch(60% 0.2 144);
+    --acent-hover-color: oklch(60% 0.17 144);
+    --acent-active-color: oklch(55% 0.17 144);
     --secondary-color: oklch(55% 0.169 25);
-    --container-background: oklch(13.8% 0.031 281.56);
+    --error-color: oklch(60% 0.18 25);
+    --success-color: oklch(60% 0.2 144);
+    --image-container-background: oklch(13.8% 0.031 281.56);
+    --container-background: oklch(20% 0.01 276.61);
+    --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
     --container-text-color: oklch(99.8% 0.031 281.56);
     --container-border: oklch(40% 0 0);
-    --link-underlined-color: oklch(50% 0.162 144);
+    --link-underlined-color: oklch(60% 0.18 144);
     --box-shadow: none;
     --hover-box-shadow: none;
     --active-box-shadow: none;
 }
 
 .light-theme {
-    --background-color: oklch(95% 0.002 325.59);
+    --background-color: oklch(90% 0.002 325.59);
     --header-color: oklch(90% 0.002 325.59);
     --header-background: linear-gradient(0deg, oklch(95% 0.002 325.59 /0%), oklch(95% 0.002 325.59));
     --text-color: oklch(15% 0 0);
     --text-secondary-color: oklch(25% 0 0);
     --inverted-text-color: oklch(90% 0 0);
     --acent-color: oklch(70% 0.23 144);
-    --acent-hover-color: oklch(80% 0.23 144);
+    --acent-hover-color: oklch(70% 0.20 144);
+    --acent-active-color: oklch(65% 0.20 144);
     --secondary-color: oklch(60% 0.169 25);
-    --container-background: oklch(13.8% 0.031 281.56);
+    --error-color: oklch(70% 0.23 25);
+    --success-color: oklch(70% 0.23 144);
+    --image-container-background: oklch(13.8% 0.031 281.56);
+    --container-background: oklch(95% 0.01 286.37);
+    --stakable-container-background: oklch(75% 0.01 286.37 / 30%);
     --container-text-color: oklch(90.8% 0.031 281.56);
     --container-border: oklch(40% 0 0);
     --link-underlined-color: oklch(70% 0.23 144);
@@ -186,6 +196,7 @@ select {
     display: block;
     padding: 10px;
     text-align: center;
+    color: var(--text-color);
     background-color: var(--container-background);
     user-select: text;
 }
@@ -204,22 +215,30 @@ a, button {
     -webkit-focus-ring-color: transparent;
 }
 
-button {
-    padding: 5px 10px;
-    width: 100px;
-    height: 40px;
-    font-size: 20px;
-    cursor: pointer;
+button:not(#theme-switcher) {
+    padding: 10px;
     background-color: var(--acent-color);
-    color: var(--text-color);
     border: none;
+    color: var(--inverted-text-color);
+    font-size: 20px;
+    font-weight: 500;
     border-radius: 15px;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
 }
-
-button:hover {
+        
+        
+button:not(#theme-switcher):hover {
+    scale: 1.0;
+    transform: translateY(-2px);
     background-color: var(--acent-hover-color);
 }
 
+button:not(#theme-switcher):active {
+    transform: translateY(2px);
+    background-color: var(--acent-active-color);
+    box-shadow: var(--active-box-shadow);
+}
 
 .header {
     display: flex;
@@ -251,11 +270,12 @@ button:hover {
 }
 
 #theme-switcher {
-    display: block;
-    /* position: fixed; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     top: 15px;
     right: 15px;
-    width: 40px;
+    width: 80px;
     height: 40px;
     margin-inline: 40px;
     border: none;
@@ -272,17 +292,19 @@ button:hover {
     opacity: 1;
 }
 
-.dark-theme-icon, .light-theme-icon {
+.dark-theme-icon,
+.light-theme-icon {
     cursor: pointer;
     height: 40px;
     width: 30px;
 }
+
 .light-theme-icon {
-    transform: translate(-4px, -50px);
+    transform: translatex(-15px);
 }
 
 .dark-theme-icon {
-    transform: translate(-4px, -5px);
+    transform: translatex(15px);
 }
 
 .logo {
