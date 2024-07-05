@@ -51,7 +51,7 @@ form label {
 form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
-    color: var(--inverted-text-color);
+    color: var(--text-color);
     background-color: var(--stakable-container-background);
     width: 100%;
     padding: 10px;
