@@ -9,6 +9,7 @@ from django.views.generic import TemplateView, FormView
 
 from .forms import GuessForm
 from .forms import SignUpForm
+from .models import Score
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
@@ -97,6 +98,11 @@ class GameView(LoginRequiredMixin, FormView):
             context['current_image'] = random_image[0]
             context['correct_answer'] = random_image[1]
 
+        # Add the score to the context
+        username = self.request.user
+        score, created = Score.objects.get_or_create(username=username)
+        context['score'] = score.score
+
         return context
 
     def form_valid(self, form):
@@ -107,8 +113,16 @@ class GameView(LoginRequiredMixin, FormView):
 
         if user_guess == correct_answer_without_extension:
             message = "Correct!"
+            score_increment = 1
         else:
             message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
+            score_increment = 0
+
+        # Update the user's score
+        username = self.request.user
+        score, created = Score.objects.get_or_create(username=username)
+        score.score += score_increment
+        score.save()
 
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])

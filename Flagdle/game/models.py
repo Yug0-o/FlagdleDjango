@@ -116,3 +116,12 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class Score(models.Model):
+    username = models.CharField(unique=True, max_length=150)
+    score = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'score_user'
