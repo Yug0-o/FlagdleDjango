@@ -32,7 +32,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
         return context
 
 
@@ -52,10 +52,10 @@ class ImagesView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-        selected_category = self.request.GET.get('category', categories[0])
+        categoriesIm = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categoriesIm[0])
         context['images'] = get_images_from_directory(selected_category)
-        context['categories'] = categories
+        context['categories'] = categoriesIm
         context['selected_category'] = selected_category
         return context
 
@@ -84,7 +84,7 @@ class GameView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
         images = get_images_from_directory(selected_category)
 
@@ -101,7 +101,7 @@ class GameView(LoginRequiredMixin, FormView):
         # Add the score to the context
         username = self.request.user
         score, created = Score.objects.get_or_create(username=username)
-        context['score'] = score.score
+        context['score'] = getattr(score, f"{selected_category.lower()}_score")
 
         return context
 
@@ -120,12 +120,13 @@ class GameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categories[0])
         score, created = Score.objects.get_or_create(username=username)
-        score.score += score_increment
+        current_score = getattr(score, f"{selected_category.lower()}_score")
+        setattr(score, f"{selected_category.lower()}_score", current_score + score_increment)
         score.save()
 
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-        selected_category = self.request.GET.get('category', categories[0])
         images = get_images_from_directory(selected_category)
         random_image = random.choice(images)
 
