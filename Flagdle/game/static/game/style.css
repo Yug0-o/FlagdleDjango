@@ -319,7 +319,7 @@ button:not(#theme-switcher):active {
     border-radius: 0 0 20px 20px;
     text-align: center;
     z-index: 100;
-    transition: transform 0.3s cubic-bezier(.19, 1, .22, 1);
+    transition: all 0.5s cubic-bezier(.19, 1, .22, 1);
 }
 
 .header-hide {
