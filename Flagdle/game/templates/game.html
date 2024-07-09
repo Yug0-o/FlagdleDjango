@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
     <script src="{% static 'js/global.js' %}" async></script>
 </head>
-<body class="dark-theme">
+<body class="">
     <header class="header" id="header">
         <h1 class="name clickable" onclick="location.href='{% url 'home' %}'"><a>Flagdle</a></h1>
         <button id="theme-switcher" aria-label="theme switche">
@@ -66,7 +66,6 @@
             </svg>
         </button>
     </header>
-<body class="light-theme">
     <h1>Flagdle</h1>
     <p>Current score: {{ score }}</p>
     <button onclick="location.href='{% url 'home' %}'">Home</button>

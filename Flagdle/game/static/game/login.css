@@ -53,8 +53,19 @@ input {
     align-items: center;
     width: 100%;
     flex-direction: row;
+    gap:10px;
 }
 
 #buttons button {
     width: 45%;
+}
+
+.signup {
+    width: 35%!important;
+    min-width:fit-content;
+    background-color: var(--text-secondary-color)!important;
+}
+
+.login {
+    width: 50% !important
 }

@@ -30,8 +30,8 @@
     --text-secondary-color: oklch(89% 0 0);
     --inverted-text-color: oklch(20% 0 0);
     --acent-color: oklch(60% 0.2 144);
-    --acent-hover-color: oklch(60% 0.17 144);
-    --acent-active-color: oklch(55% 0.17 144);
+    --hover-filter: saturate(0.7);
+    --active-filter: saturate(1.1) brightness(0.9);
     --secondary-color: oklch(55% 0.169 25);
     --error-color: oklch(60% 0.18 25);
     --success-color: oklch(60% 0.2 144);
@@ -54,8 +54,8 @@
     --text-secondary-color: oklch(25% 0 0);
     --inverted-text-color: oklch(90% 0 0);
     --acent-color: oklch(70% 0.23 144);
-    --acent-hover-color: oklch(70% 0.20 144);
-    --acent-active-color: oklch(65% 0.20 144);
+    --hover-filter: saturate(0.7);
+    --active-filter: saturate(1.1) brightness(0.9);
     --secondary-color: oklch(60% 0.169 25);
     --error-color: oklch(70% 0.23 25);
     --success-color: oklch(70% 0.23 144);
@@ -216,6 +216,9 @@ a, button {
 }
 
 button:not(#theme-switcher) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
     background-color: var(--acent-color);
     border: none;
@@ -230,13 +233,14 @@ button:not(#theme-switcher) {
         
 button:not(#theme-switcher):hover {
     scale: 1.0;
+    filter: var(--hover-filter);
     transform: translateY(-2px);
-    background-color: var(--acent-hover-color);
+    
 }
 
 button:not(#theme-switcher):active {
     transform: translateY(2px);
-    background-color: var(--acent-active-color);
+    filter: var(--active-filter);
     box-shadow: var(--active-box-shadow);
 }
 
@@ -264,7 +268,7 @@ button:not(#theme-switcher):active {
 }
 
 .name {
-    font-size: max(15px, min(5vw, 30px));
+    font-size: 30px;
     margin: 5px 0 5px 0;
     width: 120px!important;
 }
@@ -275,9 +279,9 @@ button:not(#theme-switcher):active {
     align-items: center;
     top: 15px;
     right: 15px;
-    width: 80px;
+    /* width: 80px; */
     height: 40px;
-    margin-inline: 40px;
+    /* margin-inline: 40px; */
     border: none;
     border-radius: 30px;
     background-color: transparent;

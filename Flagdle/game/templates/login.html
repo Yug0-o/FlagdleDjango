@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'game/login.css' %}">
     <script src="{% static 'js/global.js' %}" async></script>
 </head>
-<body class="dark-theme">
+<body class="">
     <header class="header" id="header">
         <h1 class="name clickable" onclick="location.href='{% url 'home' %}'"><a>Flagdle</a></h1>
         <button id="theme-switcher" aria-label="theme switche">
@@ -79,8 +79,8 @@
         <input type="password" id="password" name="password" required>
         </p>
         <p id="buttons">
-            <button onclick="location.href='{% url 'signup' %}'">Signup</button>
-        <button type="submit">Login</button>
+            <button class="signup" onclick="location.href='{% url 'signup' %}'">Signup</button>
+            <button class="login" type="submit">Login</button>
         </p>
     </form>
 </body>
