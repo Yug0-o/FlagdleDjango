@@ -37,7 +37,7 @@ label {
 }
 
 input {
-    color: var(--inverted-text-color);
+    color: var(--text-color);
     background-color: var(--stakable-container-background);
     width: 100%;
     height: 40px;
