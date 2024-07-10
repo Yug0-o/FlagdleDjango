@@ -32,7 +32,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
+        context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         return context
 
 
@@ -84,7 +84,7 @@ class GameView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
         images = get_images_from_directory(selected_category)
 
@@ -101,7 +101,8 @@ class GameView(LoginRequiredMixin, FormView):
         # Add the score to the context
         username = self.request.user
         score, created = Score.objects.get_or_create(username=username)
-        context['score'] = getattr(score, f"{selected_category.lower()}_score")
+        score_field = f"{selected_category.lower().replace('-', '_')}_score"
+        context['score'] = getattr(score, score_field)
 
         return context
 
@@ -120,11 +121,12 @@ class GameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen_Orient', 'Oceanie']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
         score, created = Score.objects.get_or_create(username=username)
-        current_score = getattr(score, f"{selected_category.lower()}_score")
-        setattr(score, f"{selected_category.lower()}_score", current_score + score_increment)
+        score_field = f"{selected_category.lower().replace('-', '_')}_score"
+        current_score = getattr(score, score_field)
+        setattr(score, score_field, current_score + score_increment)
         score.save()
 
         images = get_images_from_directory(selected_category)
