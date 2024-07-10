@@ -80,7 +80,7 @@
         </div>
     </header>
     <div class="game">
-        <p>Current score in {{ selected_category }}: {{ score }}</p>
+        <p class="{% if 'Incorrect' in message %}error{% elif 'Correct' in message %}success{% endif %}">Current score in {{ selected_category }}: {{ score }}</p>
         <form method="get" action="" class="game_control">
             <label for="category">Choose a category:</label>
             <select name="category" id="category" onchange="this.form.submit()">
@@ -91,7 +91,7 @@
         </form>
 
         {% if message %}
-            <p>{{ message }}</p>
+            <p class="{% if 'Incorrect' in message %}error{% elif 'Correct' in message %}success{% endif %}">{{ message }}</p>
         {% endif %}
 
         <div class="image-game">
