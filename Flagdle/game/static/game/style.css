@@ -22,6 +22,31 @@
     src: url(fonts/GothamSSm-Light_Web.woff2) format("woff2")
 }
 
+
+:root {
+    --background-color: oklch(15% 0.004 308.21);
+    --header-color: oklch(20% 0.004 308.21);
+    --header-background: linear-gradient(0deg, oklch(15% 0.004 308.21 /0%), oklch(15% 0.004 308.21));
+    --text-color: oklch(99% 0 0);
+    --text-secondary-color: oklch(89% 0 0);
+    --inverted-text-color: oklch(20% 0 0);
+    --acent-color: oklch(60% 0.2 144);
+    --hover-filter: saturate(0.7);
+    --active-filter: saturate(1.1) brightness(0.9);
+    --secondary-color: oklch(70% 0.2 25);
+    --error-color: oklch(60% 0.18 25);
+    --success-color: oklch(60% 0.2 144);
+    --image-container-background: oklch(13.8% 0.031 281.56);
+    --container-background: oklch(20% 0.01 276.61);
+    --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
+    --container-text-color: oklch(99.8% 0.031 281.56);
+    --container-border: oklch(40% 0 0);
+    --link-underlined-color: oklch(60% 0.18 144);
+    --box-shadow: none;
+    --hover-box-shadow: none;
+    --active-box-shadow: none;
+}
+
 .dark-theme {
     --background-color: oklch(15% 0.004 308.21);
     --header-color: oklch(20% 0.004 308.21);
@@ -96,6 +121,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: all 0.5s cubic-bezier(.19, 1, .22, 1);
+    -webkit-transition: all 0.5s cubic-bezier(.19, 1, .22, 1);
     scrollbar-width: thin;
     scrollbar-color: #888 transparent;
     user-select: none;
@@ -140,7 +166,7 @@ h1 {
 }
 
 form {
-    margin: 20px 0;
+    margin: 20px 10px;
 }
 
 label {
@@ -252,6 +278,7 @@ select {
     border-radius: 25px;
     width: 100%;
     height: auto;
+    box-shadow: var(--box-shadow);
 }
 
 
@@ -307,14 +334,15 @@ button:not(#theme-switcher):active {
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-direction: row;
+    gap:10px;
     position: sticky;
     top: 0;
     width: 100%;
     background: var(--header-background);
     backdrop-filter: blur(5px);
-    padding: 10px;
+    padding: 10px 10vw;
     margin-bottom: 10px;
     border-radius: 0 0 20px 20px;
     text-align: center;
@@ -327,9 +355,16 @@ button:not(#theme-switcher):active {
     
 }
 
+.user-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:15px;
+}
+
 .name {
     font-size: 30px;
-    margin: 5px 0 5px 0;
+    margin: 5px 0;
     width: 120px!important;
 }
 
@@ -337,11 +372,8 @@ button:not(#theme-switcher):active {
     display: flex;
     flex-direction: row;
     align-items: center;
-    top: 15px;
-    right: 15px;
-    /* width: 80px; */
+    margin-inline: -15px;
     height: 40px;
-    /* margin-inline: 40px; */
     border: none;
     border-radius: 30px;
     background-color: transparent;
@@ -422,9 +454,7 @@ a:after {
     -webkit-transform-origin: right center;
     transform-origin: right center;
     -webkit-transition: -webkit-transform .6s cubic-bezier(.19, 1, .22, 1);
-    transition: -webkit-transform .6s cubic-bezier(.19, 1, .22, 1);
     transition: transform .6s cubic-bezier(.19, 1, .22, 1);
-    transition: transform .6s cubic-bezier(.19, 1, .22, 1), -webkit-transform .6s cubic-bezier(.19, 1, .22, 1);
 }
 
 a:after {
@@ -436,6 +466,7 @@ a:hover:after {
     transition-duration: .4s;
     -webkit-transform: scaleX(1);
     transform: scaleX(1);
+    height: 2px;
     -webkit-transform-origin: left center;
     transform-origin: left center;
 }
@@ -443,10 +474,24 @@ a:hover:after {
 
 @media (max-width: 1000px) {
    .image-container {
-        max-width: 120px;
+        max-width: 150px;
     }
 
     .image-grid {
         padding-inline: 5vw;
+    }
+
+    /* .header {
+        padding: 10px 50px;
+    } */
+}
+
+@media (max-width: 600px) {
+    .image-container {
+        max-width: min-content;
+    }
+
+    .image-container img {
+        min-width: 100px;
     }
 }

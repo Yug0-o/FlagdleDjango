@@ -11,64 +11,45 @@ window.addEventListener('scroll', function () {
     lastScrollTop = scrollTop;
 });
 
-const themeSwitcher = document.getElementById('theme-switcher');
 const moonIcon = document.querySelector('#moon-icon');
 const sunIcon = document.querySelector('#sun-icon');
 const body = document.body;
 
-themeSwitcher.addEventListener('click', () => {
-    if (body.classList.contains('dark-theme')) {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        moonIcon.classList.remove('shown');
-        moonIcon.classList.add('hidden');
-        sunIcon.classList.remove('hidden');
-        sunIcon.classList.add('shown');
-    } else {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        moonIcon.classList.remove('hidden');
-        moonIcon.classList.add('shown');
-        sunIcon.classList.remove('shown');
-        sunIcon.classList.add('hidden');
-    }
+// Function to toggle theme
+function toggleTheme() {
+    // Toggle theme classes on the body
+    body.classList.toggle('dark-theme');
+    body.classList.toggle('light-theme');
+
+    // Determine if dark theme is active after toggle
+    const isDarkTheme = body.classList.contains('dark-theme');
+
+    // Toggle icon visibility based on theme
+    moonIcon.classList.toggle('shown', isDarkTheme);
+    moonIcon.classList.toggle('hidden', !isDarkTheme);
+    sunIcon.classList.toggle('shown', !isDarkTheme);
+    sunIcon.classList.toggle('hidden', isDarkTheme);
+
     // Store the current theme in local storage
-    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme');
-});
+    localStorage.setItem('theme', isDarkTheme ? 'dark-theme' : 'light-theme');
+}
+
+// Add event listeners to icons
+moonIcon.addEventListener('click', toggleTheme);
+sunIcon.addEventListener('click', toggleTheme);
 
 window.onload = function () {
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme');
+    body.classList.add(storedTheme);
+    localStorage.setItem('theme', storedTheme); // Ensure theme is stored if it was based on system preference
 
-    if (storedTheme) {
-        body.classList.add(storedTheme);
-        if (storedTheme === 'dark-theme') {
-            moonIcon.classList.remove('hidden');
-            moonIcon.classList.add('shown');
-            sunIcon.classList.remove('shown');
-            sunIcon.classList.add('hidden');
-        } else {
-            moonIcon.classList.remove('shown');
-            moonIcon.classList.add('hidden');
-            sunIcon.classList.remove('hidden');
-            sunIcon.classList.add('shown');
-        }
-    } else if (prefersDark) {
-        body.classList.add('dark-theme');
-        moonIcon.classList.remove('hidden');
-        moonIcon.classList.add('shown');
-        sunIcon.classList.remove('shown');
-        sunIcon.classList.add('hidden');
-        localStorage.setItem('theme', 'dark-theme');
-    } else {
-        body.classList.add('light-theme');
-        moonIcon.classList.remove('shown');
-        moonIcon.classList.add('hidden');
-        sunIcon.classList.remove('hidden');
-        sunIcon.classList.add('shown');
-        localStorage.setItem('theme', 'light-theme');
-    }
+    // Simplify icon visibility toggle
+    const isDarkTheme = storedTheme === 'dark-theme';
+    moonIcon.classList.toggle('shown', isDarkTheme);
+    moonIcon.classList.toggle('hidden', !isDarkTheme);
+    sunIcon.classList.toggle('shown', !isDarkTheme);
+    sunIcon.classList.toggle('hidden', isDarkTheme);
 
-    const elements = document.querySelectorAll('body > *:not(footer):not(script):not(header)');
-    elements.forEach(element => element.classList.add('animate'));
+    // Apply initial animation to certain elements
+    document.querySelectorAll('body > *:not(footer):not(script):not(header)').forEach(element => element.classList.add('animate'));
 };

@@ -41,7 +41,7 @@ def get_images_from_directory(directory):
     images = []
     if os.path.exists(directory_path):
         for filename in os.listdir(directory_path):
-            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')) and 'icon' not in filename:
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) and 'icon' not in filename:
                 filename_without_extension = os.path.splitext(filename)[0]
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
@@ -70,7 +70,7 @@ class FullnameView(LoginRequiredMixin, TemplateView):
         directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
         images = []
         for filename in os.listdir(directory_path):
-            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
                 filename_without_extension = os.path.splitext(filename)[0]
                 images.append((os.path.join('flags', 'fullname', filename), filename_without_extension))
         context['images'] = images

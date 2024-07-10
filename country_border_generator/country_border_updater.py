@@ -5,6 +5,7 @@ import threading
 import os
 
 import GeojsonToOrthographicProjection as gtop
+import png_to_webp as ptw
 
 DEBUG_FULL = False
 DEBUG_INFO = True
@@ -19,7 +20,7 @@ continents = gtop.continents
 # retrieve the languages from the GeoDataFrame
 languages = [col.split('_')[1] for col in World_gdf.columns if col.startswith('name_')]
 
-def CountryName_to_png(country_name:str, save_path='', gdf=World_gdf):
+def CountryName_to_image(country_name:str, save_path='', gdf=World_gdf):
     """
     Given a <country_name>, create an image of the country centered on the country's centroid.\n
     If <save_path> is specified, save the image to the path.
@@ -76,6 +77,7 @@ def CountryName_to_png(country_name:str, save_path='', gdf=World_gdf):
         plt.show(block=True)
     else:
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
+        ptw.convert_png_to_webp(save_path)
 
     plt.close()
         
@@ -102,7 +104,7 @@ def update_image(country_name:str, folder:str, image:str):
         image = "icon.png"
         
     save_path = os.path.join(country_folder, folder, image)
-    if CountryName_to_png(country_name, save_path):
+    if CountryName_to_image(country_name, save_path):
         if DEBUG_FULL: print(f"\t✅ Updated {country_name}")
         if image == "icon.png":
             print(f"✅ Updated {folder}'s icon\n")
@@ -205,7 +207,7 @@ def manual_update_countries():
                 if confirm.lower() == 'n':
                     continue
                 
-                if CountryName_to_png(found_name, target_folder):
+                if CountryName_to_image(found_name, target_folder):
                     print(f"✅ Updated {country_name}")
                 else:
                     print(f"❌ Failed to update {country_name}")
@@ -214,7 +216,7 @@ def manual_update_countries():
         print(f"✅ {country_name} found.")
         print(f"🔄 Updating {country_name}...")
         
-        if CountryName_to_png(country_name, target_file):
+        if CountryName_to_image(country_name, target_file):
             print(f"✅ Updated {country_name}")
         else: 
             print(f"❌ Failed to update {country_name}")
@@ -242,7 +244,7 @@ def plot_countries():
             print_country_names(language)
             
         elif country_name != '':
-            CountryName_to_png(country_name)
+            CountryName_to_image(country_name)
 
 
 if __name__ == '__main__':

@@ -69,3 +69,9 @@ input {
 .login {
     width: 50% !important
 }
+
+@media (max-width: 350px) {
+    form {
+        margin: 50px 10px;
+    }
+}

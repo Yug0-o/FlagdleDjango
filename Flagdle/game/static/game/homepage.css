@@ -1,17 +1,30 @@
 .button-grid {
     display: flex;
-    gap: 20px;
-    margin-top: 40px;
+    gap: 30px;
+    margin: 40px;
+    padding-inline: 10vw;
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-button {
-    padding: 5px 10px;
+h1 {
+    text-align: center;
+    color: var(--text-color);
+    margin-inline: 15px;
+}
+
+form {
+    margin:0;
     width:fit-content;
-    height: 40px;
+    height:fit-content;
+}
+
+form button {
+    padding: 5px 10px;
+    max-width:fit-content!important;
+    height: fit-content!important;
     font-size: 20px;
     cursor: pointer;
     background-color: var(--acent-color);
@@ -35,4 +48,10 @@ form {
 .clickable:active {
     transform: translateY(2px);
     box-shadow: var(--active-box-shadow);
+}
+
+@media (max-width: 1000px) {
+    .button-grid {
+        padding-inline: 5vw;
+    }
 }
