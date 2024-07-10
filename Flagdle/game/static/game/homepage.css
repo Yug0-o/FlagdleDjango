@@ -1,44 +1,65 @@
-.button-grid {
-    display: flex;
-    gap: 30px;
-    margin: 40px;
-    padding-inline: 10vw;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
 h1 {
     text-align: center;
     color: var(--text-color);
     margin-inline: 15px;
 }
 
-form {
-    margin:0;
-    width:fit-content;
-    height:fit-content;
+.button-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px;
+    width: 90%;
+    max-width: 600px;
 }
 
-form button {
-    padding: 5px 10px;
-    max-width:fit-content!important;
-    height: fit-content!important;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: var(--acent-color);
+.game-button {
+    display: flex;
+    flex-direction: row;
     color: var(--text-color);
-    border: none;
-    border-radius: 15px;
+    user-select: none;
+    margin:0;
+    padding: 0;
+    width:fit-content;
+    width: 100%;
+    height:100%;
 }
 
-button:hover {
-    background-color: var(--acent-hover-color);
+.game-button button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start !important;
+    overflow: hidden;
+    background-color: var(--container-background) !important;
+    width: 100%;
+    height: fit-content;
+    font-size: 20px !important;
+    cursor: pointer;
+    padding: 0 !important;
+    border: 3px solid var(--container-border) !important;
+    border-radius: 35px !important;
 }
 
-form {
-    display: inline-block;
+.game-button button:hover {
+    border-color: var(--acent-color)!important;
+    background-color: var(--container-bakground-hover)!important;
+}
+
+.game-button img {
+    width: 150px;
+    height: 150px;
+    margin: -2px;
+    margin-right: 7%;
+    border-radius: 35px;
+    color: var(--text-color);
+}
+
+.game-button span {
+    color: var(--text-color);
+    font-size: 1.25em;
 }
 
 .clickable {
@@ -50,8 +71,17 @@ form {
     box-shadow: var(--active-box-shadow);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 650px) {
     .button-grid {
-        padding-inline: 5vw;
+        gap: 15px;
+    }
+
+    .game-button img {
+        width: 125px;
+        height: 125px;
+    }
+
+    .game-button span {
+        font-size: 1em;
     }
 }

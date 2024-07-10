@@ -155,6 +155,7 @@ class GameView(LoginRequiredMixin, FormView):
 
 
 @csrf_exempt
+# file deepcode ignore DisablesCSRFProtection: <not a security issue>
 def reset_current_score(request):
     if request.method == 'POST':
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']

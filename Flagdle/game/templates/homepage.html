@@ -5,21 +5,36 @@
 {% block content %}
     <h1>Welcome to Flagdle</h1>
     <div class="button-grid">
+        <form class="game-button" action="/Flagdle/leaderboard/" method="get">
+            <button type="submit">
+                <img src="/static/country/Europe/icon.webp" alt="Leaderboard">
+                <span>Leaderboard</span>
+            </button>
+        </form>
+
+        <form class="game-button" action="/Flagdle/flags/" method="get">
+            <button type="submit">
+                <img src="/static/country/Asie/icon.webp" alt="Encyclopédie des drapeaux">
+                <span>Encyclopédie des drapeaux</span>
+            </button>
+        </form>
+
+        <form class="game-button" action="/Flagdle/countries/" method="get">
+            <button type="submit">
+                <img src="/static/country/Afrique/icon.webp" alt="Encyclopédie des pays">
+                <span>Encyclopédie des pays</span>
+            </button>
+        </form>
+        
         {% for category in categories %}
-            <form action="{% url 'game' %}" method="get">
+            <form class="game-button" action="{% url 'game' %}" method="get">
                 <input type="hidden" name="category" value="{{ category }}">
-                <button type="submit">{{ category }}</button>
+                <button type="submit">
+                    <img src="% /assets/country/{category}/icon.webp %" alt="{{ category }}">
+                    <span>{{ category }}</span>
+                </button>
             </form>
         {% endfor %}
-        <form action="/Flagdle/flags/" method="get">
-            <button type="submit">Encyclopédie des drapeaux</button>
-        </form>
-        <form action="/Flagdle/countries/" method="get">
-            <button type="submit">Encyclopédie des pays</button>
-        </form>
-        <form action="/Flagdle/leaderboard/" method="get">
-            <button type="submit">Leaderboard</button>
-        </form>
     </div>
     {% if message %}
         <p>{{ message }}</p>

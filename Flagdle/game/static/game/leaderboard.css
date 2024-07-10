@@ -1,0 +1,92 @@
+h2 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.leaderboard {
+    width: 80%;
+    margin: 20px;
+    padding: 15px;
+    border-collapse: collapse;
+    box-shadow: var(--box-shadow);
+    background-color: var(--container-background);
+    border-radius: 15px;
+    overflow: scroll;
+}
+
+table {
+    overflow: scroll;
+    width: 100%;
+    border-spacing: 1px;
+    user-select: text!important;
+}
+
+thead {
+    overflow: scroll;
+    background-color: var(--header-background);
+    color: var(--text-color);
+}
+
+thead *:hover {
+    background-color: var(--header-background)!important;
+}
+
+thead tr th {
+    font-size: 1.2em;
+}
+
+tbody {
+    overflow: scroll;
+    background-color: var(--stakable-container-background);
+    color: var(--text-color);
+}
+
+
+
+td:hover {
+    background-color: var(--container-bakground-hover);
+}
+
+th, td {
+    width:fit-content;
+    /* text-wrap:nowrap; */
+    text-align: left;
+    padding: 12px 15px;
+    user-select: text!important;
+}
+
+th {
+    font-weight: 400;
+    border-bottom: 2px solid var(--acent-color);
+}
+
+td {
+    border-bottom: 1px solid var(--container-border-hover);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 1400px) {
+    thead tr th {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 1000px) {
+    h2 {
+        font-size: 2em;
+    }
+
+    .leaderboard {
+        width: 90%;
+    }
+
+    thead tr th {
+        font-size: 0.8em;
+    }
+    tbody tr td {
+        font-size: 0.8em;
+    }
+}
