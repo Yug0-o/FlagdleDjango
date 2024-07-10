@@ -46,16 +46,17 @@ def get_images_from_directory(directory):
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
 
+
 class ImagesView(LoginRequiredMixin, TemplateView):
     template_name = 'images.html'
     login_url = 'login'  # URL to redirect if the user is not logged in
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categoriesIm = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-        selected_category = self.request.GET.get('category', categoriesIm[0])
+        categories_image = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        selected_category = self.request.GET.get('category', categories_image[0])
         context['images'] = get_images_from_directory(selected_category)
-        context['categories'] = categoriesIm
+        context['categories'] = categories_image
         context['selected_category'] = selected_category
         return context
 
@@ -107,7 +108,6 @@ class GameView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        current_image = form.cleaned_data['current_image']
         user_guess = form.cleaned_data['guess'].strip().lower()
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
