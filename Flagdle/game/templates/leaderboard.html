@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard</title>
+    {% load static %}
+    {% load custom_filters %}
+    <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
+</head>
+<body>
+    <header class="header" id="header">
+        <h1 class="name clickable" onclick="location.href='{% url 'home' %}'"><a>Flagdle</a></h1>
+    </header>
+    <div class="leaderboard">
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    {% for category in categories %}
+                        <th>{{ category }}</th>
+                    {% endfor %}
+                    <th>Total Best Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in leaderboard %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        {% for category in categories %}
+                            <td>{{ user.scores|get_item:category }}</td>
+                        {% endfor %}
+                        <td>{{ user.total_best_score }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

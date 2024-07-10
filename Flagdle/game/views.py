@@ -176,3 +176,38 @@ def reset_current_score(request):
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'fail'}, status=400)
+
+
+class LeaderboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'leaderboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        scores = Score.objects.all()
+
+        leaderboard = []
+
+        for score in scores:
+            user_scores = {
+                'username': score.username,
+                'total_best_score': 0,
+                'scores': {}
+            }
+
+            for category in categories:
+                best_score_field = f"{category.lower().replace('-', '_')}_best_score"
+                best_score = getattr(score, best_score_field, 0)
+                user_scores['scores'][category] = best_score
+                user_scores['total_best_score'] += best_score
+
+            leaderboard.append(user_scores)
+            print(user_scores)
+
+        # Tri des utilisateurs par le score total décroissant
+        leaderboard = sorted(leaderboard, key=lambda x: x['total_best_score'], reverse=True)
+
+        context['leaderboard'] = leaderboard
+        context['categories'] = categories
+
+        return context
