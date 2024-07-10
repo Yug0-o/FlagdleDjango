@@ -38,13 +38,14 @@ label {
 
 input {
     color: var(--text-color);
+    font-size: 1em;
     background-color: var(--stakable-container-background);
     width: 100%;
-    height: 40px;
+    height: auto;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid var(--container-border);
-    border-radius: 10px;
+    border-radius: 15px;
 }
 
 #buttons {
@@ -70,7 +71,7 @@ input {
     width: 50% !important
 }
 
-@media (max-width: 350px) {
+@media (max-width: 400px) {
     form {
         margin: 50px 10px;
     }

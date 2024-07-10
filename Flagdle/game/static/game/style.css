@@ -166,13 +166,16 @@ h1 {
 }
 
 form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 20px 10px;
 }
 
 label {
     font-size: 18px;
-    margin-right: 10px;
-    margin-bottom: 5px;
+    padding:10px;
 }
 
 select {
@@ -233,17 +236,25 @@ select {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 90%;
-    max-width: 420px;
+    max-width: 80%;
 }
 
 .game p {
     display: flex;
     justify-content: center;
     width:fit-content;
+    font-size: 1.2em;
     margin-bottom: 5px;
     border-radius: 15px;
     padding: 5px;
+}
+
+.error {
+    color: var(--error-color);
+}
+
+.success {
+    color: var(--success-color);
 }
 
 .game *{
@@ -270,7 +281,7 @@ select {
 }
 
 .image-game {
-    max-width: 80%;
+    max-width: 420px;
 }
 
 .image-game img{
@@ -282,12 +293,12 @@ select {
 }
 
 
-
 input[type="text"], select {
     color: var(--text-color);
+    font-size: 1em;
     background-color: var(--stakable-container-background);
     width: 100%;
-    height: 40px;
+    height: auto;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid var(--container-border);
@@ -493,5 +504,13 @@ a:hover:after {
 
     .image-container img {
         min-width: 100px;
+    }
+
+    .game select {
+        width: 75%!important;
+    }
+
+    .game p {
+        font-size: 1em;
     }
 }
