@@ -110,7 +110,6 @@ class GameView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        current_image = form.cleaned_data['current_image']
         user_guess = form.cleaned_data['guess'].strip().lower()
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
@@ -166,7 +165,7 @@ def reset_current_score(request):
         except Score.DoesNotExist:
             score = Score(username=username)
 
-        # Itérer sur chaque catégorie et réinitialiser le score correspondant
+        # Iterate over each category and reset the corresponding score
         for category in categories:
             score_field_prefix = category.lower().replace('-', '_')
             current_score_field = f"{score_field_prefix}_current_score"
