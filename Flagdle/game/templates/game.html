@@ -7,6 +7,7 @@
     <title>Flagdle</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/global.js' %}" async></script>
 </head>
 <body class="">
@@ -80,7 +81,8 @@
         </div>
     </header>
     <div class="game">
-        <p class="{% if 'Incorrect' in message %}error{% elif 'Correct' in message %}success{% endif %}">Current score in {{ selected_category }}: {{ score }}</p>
+        <p>Current score in {{ selected_category }}: {{ current_score }}</p>
+        <p>Best score in {{ selected_category }}: {{ best_score }}</p>
         <form method="get" action="" class="game_control">
             <label for="category">Choose a category:</label>
             <select name="category" id="category" onchange="this.form.submit()">
@@ -91,7 +93,7 @@
         </form>
 
         {% if message %}
-            <p class="{% if 'Incorrect' in message %}error{% elif 'Correct' in message %}success{% endif %}">{{ message }}</p>
+            <p>{{ message }}</p>
         {% endif %}
 
         <div class="image-game">

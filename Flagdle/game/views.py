@@ -3,9 +3,10 @@ import random
 
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.views.generic import TemplateView, FormView
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView, TemplateView, FormView
 
 from .forms import GuessForm
 from .forms import SignUpForm
@@ -99,11 +100,12 @@ class GameView(LoginRequiredMixin, FormView):
             context['current_image'] = random_image[0]
             context['correct_answer'] = random_image[1]
 
-        # Add the score to the context
+        # Add the scores to the context
         username = self.request.user
         score, created = Score.objects.get_or_create(username=username)
-        score_field = f"{selected_category.lower().replace('-', '_')}_score"
-        context['score'] = getattr(score, score_field)
+        score_field_prefix = selected_category.lower().replace('-', '_')
+        context['current_score'] = getattr(score, f"{score_field_prefix}_current_score")
+        context['best_score'] = getattr(score, f"{score_field_prefix}_best_score")
 
         return context
 
@@ -124,9 +126,19 @@ class GameView(LoginRequiredMixin, FormView):
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
         score, created = Score.objects.get_or_create(username=username)
-        score_field = f"{selected_category.lower().replace('-', '_')}_score"
-        current_score = getattr(score, score_field)
-        setattr(score, score_field, current_score + score_increment)
+        score_field_prefix = selected_category.lower().replace('-', '_')
+
+        current_score_field = f"{score_field_prefix}_current_score"
+        best_score_field = f"{score_field_prefix}_best_score"
+
+        current_score = getattr(score, current_score_field)
+        new_current_score = current_score + score_increment
+        setattr(score, current_score_field, new_current_score)
+
+        best_score = getattr(score, best_score_field)
+        if new_current_score > best_score:
+            setattr(score, best_score_field, new_current_score)
+
         score.save()
 
         images = get_images_from_directory(selected_category)
@@ -140,3 +152,27 @@ class GameView(LoginRequiredMixin, FormView):
             correct_answer=random_image[1],
             message=message
         ))
+
+
+@csrf_exempt
+def reset_current_score(request):
+    if request.method == 'POST':
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        username = request.user.username
+
+        try:
+            score = Score.objects.get(username=username)
+        except Score.DoesNotExist:
+            score = Score(username=username)
+
+        # Iterate over each category and reset the corresponding score
+        for category in categories:
+            score_field_prefix = category.lower().replace('-', '_')
+            current_score_field = f"{score_field_prefix}_current_score"
+            if hasattr(score, current_score_field):
+                setattr(score, current_score_field, 0)
+
+        score.save()
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'fail'}, status=400)

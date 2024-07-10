@@ -120,12 +120,18 @@ class DjangoSession(models.Model):
 
 class Score(models.Model):
     username = models.CharField(unique=True, max_length=150)
-    afrique_score = models.IntegerField(default=0)
-    amerique_score = models.IntegerField(default=0)
-    asie_score = models.IntegerField(default=0)
-    europe_score = models.IntegerField(default=0)
-    moyen_orient_score = models.IntegerField(default=0)
-    oceanie_score = models.IntegerField(default=0)
+    afrique_current_score = models.IntegerField(default=0)
+    afrique_best_score = models.IntegerField(default=0)
+    amerique_current_score = models.IntegerField(default=0)
+    amerique_best_score = models.IntegerField(default=0)
+    asie_current_score = models.IntegerField(default=0)
+    asie_best_score = models.IntegerField(default=0)
+    europe_current_score = models.IntegerField(default=0)
+    europe_best_score = models.IntegerField(default=0)
+    moyen_orient_current_score = models.IntegerField(default=0)
+    moyen_orient_best_score = models.IntegerField(default=0)
+    oceanie_current_score = models.IntegerField(default=0)
+    oceanie_best_score = models.IntegerField(default=0)
 
     class Meta:
         managed = False

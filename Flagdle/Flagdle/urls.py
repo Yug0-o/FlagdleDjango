@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from game.views import HomeView, ImagesView, FullnameView, GameView, SignUpView
+from game.views import HomeView, ImagesView, FullnameView, GameView, SignUpView, reset_current_score
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,6 @@ urlpatterns = [
     path('Flagdle/countries/', ImagesView.as_view(), name='countries'),
     path('Flagdle/flags/', FullnameView.as_view(), name='flags'),
     path('Flagdle/game/', GameView.as_view(), name='game'),
+    path('Flagdle/reset_current_score/', reset_current_score, name='reset_current_score'),
+
 ]
