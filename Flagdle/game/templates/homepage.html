@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Protected Game{% endblock %}
+{% block title %}Flagdle{% endblock %}
 
 {% block content %}
     <h1>Welcome to Flagdle</h1>
@@ -25,16 +25,17 @@
                 <span>Encyclopédie des pays</span>
             </button>
         </form>
-        
-        {% for category in categories %}
-            <form class="game-button" action="{% url 'game' %}" method="get">
-                <input type="hidden" name="category" value="{{ category }}">
-                <button type="submit">
-                    <img src="% /assets/country/{category}/icon.webp %" alt="{{ category }}">
-                    <span>{{ category }}</span>
-                </button>
-            </form>
-        {% endfor %}
+        {% if user.is_authenticated %}
+            {% for category in categories %}
+                <form class="game-button" action="{% url 'game' %}" method="get">
+                    <input type="hidden" name="category" value="{{ category }}">
+                    <button type="submit">
+                        <img src="% /assets/country/{category}/icon.webp %" alt="{{ category }}">
+                        <span>{{ category }}</span>
+                    </button>
+                </form>
+            {% endfor %}
+        {% endif %}
     </div>
     {% if message %}
         <p>{{ message }}</p>

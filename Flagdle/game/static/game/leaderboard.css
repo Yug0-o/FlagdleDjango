@@ -4,7 +4,7 @@ h2 {
 }
 
 .leaderboard {
-    width: 80%;
+    width: 90%;
     margin: 20px;
     padding: 15px;
     border-collapse: collapse;
@@ -17,7 +17,7 @@ h2 {
 table {
     overflow: scroll;
     width: 100%;
-    border-spacing: 1px;
+    border-spacing: 0px;
     user-select: text!important;
 }
 
@@ -39,20 +39,32 @@ tbody {
     overflow: scroll;
     background-color: var(--stakable-container-background);
     color: var(--text-color);
+    font-size: 1em;
+}
+
+tr:nth-child(even) {
+    background-color: var(--stakable-container-background);
+}
+
+tr:hover {
+    background-color: var(--container-background-hover);
 }
 
 
-
-td:hover {
-    background-color: var(--container-bakground-hover);
-}
 
 th, td {
     width:fit-content;
     /* text-wrap:nowrap; */
-    text-align: left;
-    padding: 12px 15px;
+    text-align: center;
+    padding: 5px 1vw;
     user-select: text!important;
+    border-right: 1px solid var(--container-background-hover);
+}
+
+
+th:last-child,
+td:last-child {
+    border-inline: none;
 }
 
 th {
@@ -68,25 +80,34 @@ tr:last-child td {
     border-bottom: none;
 }
 
-@media (max-width: 1400px) {
-    thead tr th {
-        font-size: 1em;
+@media (max-width: 1200px) {
+    .leaderboard {
+        font-size: 0.8em;
     }
 }
 
-@media (max-width: 1000px) {
+
+@media (max-width: 900px) {
     h2 {
         font-size: 2em;
     }
 
     .leaderboard {
-        width: 90%;
+        width: 98%;
+        font-size: 0.7em;
     }
 
-    thead tr th {
-        font-size: 0.8em;
+    tbody {
+        font-size: 1.4em;
     }
-    tbody tr td {
-        font-size: 0.8em;
+}
+
+@media (max-width: 720px) {
+    .leaderboard {
+        width: 98%;
+        font-size: 0.5em;
+        padding: 5px;
     }
+
+
 }

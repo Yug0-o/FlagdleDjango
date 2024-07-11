@@ -3,7 +3,7 @@ h1 {
     color: var(--text-color);
 }
 
-form {
+.signup-form {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
@@ -15,53 +15,54 @@ form {
     box-shadow: var(--box-shadow);
 }
 
-form *:not(button) {
+.signup-form *:not(button) {
     user-select: text;
 }
 
-form p {
+.signup-form p {
     display: flex;
     color: var(--text-color);
-    max-width: 600px;
+    width: 95%;
     font-weight: 300;
     margin-bottom: 15px;
     flex-direction: column;
     align-items: flex-start;
 }
 
-form ul {
+.signup-form ul {
     padding: 0;
     margin: 0;
+    width:95%;
     list-style-type:none;
 }
 
-form li,
+.signup-form li,
 .helptext {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     font-size: 0.8em;
-    font-weight: 400;
+    font-weight: 300;
 }
 
-form label {
+.signup-form label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="password"] {
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"] {
     color: var(--text-color);
     background-color: var(--stakable-container-background);
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid var(--container-border);
     border-radius: 10px;
     box-sizing: border-box;
 }
 
-form button {
+.signup-form button {
     width: 75%;
     padding: 10px;
     background-color: var(--acent-color);
@@ -73,10 +74,10 @@ form button {
     box-shadow: var(--box-shadow);
 }
 
-form button:hover {
+.signup-form button:hover {
     background-color: var(--acent-hover-color);
 }
-form button:active {
+.signup-form button:active {
     transform: translateY(2px);
     background-color: var(--acent-active-color);
     box-shadow: var(--active-box-shadow);

@@ -45,7 +45,7 @@ h1 {
 
 .game-button button:hover {
     border-color: var(--acent-color)!important;
-    background-color: var(--container-bakground-hover)!important;
+    background-color: var(--container-background-hover)!important;
 }
 
 .game-button img {

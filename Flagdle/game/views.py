@@ -27,9 +27,8 @@ class SignUpView(CreateView):
         return super().form_valid(form)
 
 
-class HomeView(LoginRequiredMixin, TemplateView):
+class HomeView(TemplateView):
     template_name = 'homepage.html'
-    login_url = 'login'  # URL to redirect if the user is not logged in
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,9 +47,8 @@ def get_images_from_directory(directory):
     return images
 
 
-class ImagesView(LoginRequiredMixin, TemplateView):
+class ImagesView(TemplateView):
     template_name = 'images.html'
-    login_url = 'login'  # URL to redirect if the user is not logged in
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,9 +60,8 @@ class ImagesView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class FullnameView(LoginRequiredMixin, TemplateView):
+class FullnameView(TemplateView):
     template_name = 'flags.html'
-    login_url = 'login'  # URL to redirect if the user is not logged in
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -102,6 +99,9 @@ class GameView(LoginRequiredMixin, FormView):
 
         # Add the scores to the context
         username = self.request.user
+        if len(username) == 0 or not username:
+            return context
+        
         score, created = Score.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
         context['current_score'] = getattr(score, f"{score_field_prefix}_current_score")
@@ -160,6 +160,8 @@ def reset_current_score(request):
     if request.method == 'POST':
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         username = request.user.username
+        if not username:
+            return JsonResponse({'status': 'Accepted'}, status=202)
 
         try:
             score = Score.objects.get(username=username)
@@ -179,7 +181,7 @@ def reset_current_score(request):
     return JsonResponse({'status': 'fail'}, status=400)
 
 
-class LeaderboardView(LoginRequiredMixin, TemplateView):
+class LeaderboardView(TemplateView):
     template_name = 'leaderboard.html'
 
     def get_context_data(self, **kwargs):
@@ -190,20 +192,21 @@ class LeaderboardView(LoginRequiredMixin, TemplateView):
         leaderboard = []
 
         for score in scores:
-            user_scores = {
-                'username': score.username,
-                'total_best_score': 0,
-                'scores': {}
-            }
+            if score.username:
+                user_scores = {
+                    'username': score.username,
+                    'total_best_score': 0,
+                    'scores': {}
+                }
 
-            for category in categories:
-                best_score_field = f"{category.lower().replace('-', '_')}_best_score"
-                best_score = getattr(score, best_score_field, 0)
-                user_scores['scores'][category] = best_score
-                user_scores['total_best_score'] += best_score
+                for category in categories:
+                    best_score_field = f"{category.lower().replace('-', '_')}_best_score"
+                    best_score = getattr(score, best_score_field, 0)
+                    user_scores['scores'][category] = best_score
+                    user_scores['total_best_score'] += best_score
 
-            leaderboard.append(user_scores)
-            print(user_scores)
+                leaderboard.append(user_scores)
+                print(user_scores)
 
         # Tri des utilisateurs par le score total décroissant
         leaderboard = sorted(leaderboard, key=lambda x: x['total_best_score'], reverse=True)

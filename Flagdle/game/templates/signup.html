@@ -74,7 +74,7 @@
         </div>
     </header>
     <h1>Sign Up</h1>
-    <form method="post">
+    <form class="signup-form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button class="clickable" type="submit">Sign Up</button>

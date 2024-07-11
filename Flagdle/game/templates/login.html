@@ -78,11 +78,11 @@
         {% csrf_token %}
         <p id="username">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" autocomplete="username" required>
         </p>
         <p id="password">
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
         </p>
         <p id="buttons">
             <button class="signup" onclick="location.href='{% url 'signup' %}'">Signup</button>

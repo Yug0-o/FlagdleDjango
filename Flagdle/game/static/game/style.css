@@ -38,9 +38,11 @@
     --success-color: oklch(60% 0.2 144);
     --image-container-background: oklch(13.8% 0.031 281.56);
     --container-background: oklch(20% 0.01 276.61);
+    --container-background-hover: oklch(30% 0.01 276.61);
     --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
     --container-text-color: oklch(99.8% 0.031 281.56);
-    --container-border: oklch(40% 0 0);
+    --container-border: oklch(50% 0 0);
+    --container-border-hover: oklch(80% 0 0);
     --link-underlined-color: oklch(60% 0.18 144);
     --box-shadow: none;
     --hover-box-shadow: none;
@@ -62,7 +64,7 @@
     --success-color: oklch(60% 0.2 144);
     --image-container-background: oklch(13.8% 0.031 281.56);
     --container-background: oklch(20% 0.01 276.61);
-    --container-bakground-hover: oklch(30% 0.01 276.61);
+    --container-background-hover: oklch(30% 0.01 276.61);
     --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
     --container-text-color: oklch(99.8% 0.031 281.56);
     --container-border: oklch(50% 0 0);
@@ -88,7 +90,7 @@
     --success-color: oklch(70% 0.23 144);
     --image-container-background: oklch(13.8% 0.031 281.56);
     --container-background: oklch(95% 0.01 286.37);
-    --container-bakground-hover: oklch(100% 0.01 286.37);
+    --container-background-hover: oklch(100% 0.01 286.37);
     --stakable-container-background: oklch(75% 0.01 286.37 / 30%);
     --container-text-color: oklch(90.8% 0.031 281.56);
     --container-border: oklch(50% 0 0);
@@ -374,7 +376,15 @@ button:not(#theme-switcher):active {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap:15px;
+    gap:50px;
+}
+
+.tds-icon-person svg {
+    display: block;
+    width: 26px;
+    transition: none;
+    fill: var(--text-secondary-color);
+    transform: scale(1.5);
 }
 
 .name {
@@ -408,6 +418,8 @@ button:not(#theme-switcher):active {
     cursor: pointer;
     height: 40px;
     width: 30px;
+    fill: var(--text-color);
+    transform: rotate(0deg);
 }
 
 .light-theme-icon {
@@ -455,7 +467,7 @@ a {
 }
 
 
-a:after {
+a:not(.tds-icon-person):after {
     content: '';
     position: absolute;
     bottom: 2px;
@@ -472,11 +484,7 @@ a:after {
     transition: transform .6s cubic-bezier(.19, 1, .22, 1);
 }
 
-a:after {
-    background: var(--link-underlined-color);
-}
-
-a:hover:after {
+a:not(.tds-icon-person):hover:after {
     -webkit-transition-duration: .4s;
     transition-duration: .4s;
     -webkit-transform: scaleX(1);
@@ -516,5 +524,9 @@ a:hover:after {
 
     .game p {
         font-size: 1em;
+    }
+
+    .user-control {
+        gap: 5vw;
     }
 }

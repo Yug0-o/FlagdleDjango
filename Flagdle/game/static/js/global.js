@@ -25,7 +25,7 @@ sunIcon.addEventListener('click', toggleTheme);
 
 // Scroll event to hide the header
 window.addEventListener('scroll', function () {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let scrollTop = document.documentElement.scrollTop;
     if (scrollTop > lastScrollTop && scrollTop > 50) {
         header.classList.add('header-hide');
     } else if (scrollTop < lastScrollTop) {
@@ -46,7 +46,9 @@ function resetScore() {
             },
             async: false,
             success: function(response) {
-                console.log('Score reset successfully');
+                if (response === 'success'){
+                    console.log('Score reset successfully');
+                }
             },
             error: function(xhr, status, error) {
                 console.log('Error resetting score: ' + error);
