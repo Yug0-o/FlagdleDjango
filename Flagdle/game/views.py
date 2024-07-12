@@ -99,8 +99,6 @@ class GameView(LoginRequiredMixin, FormView):
 
         # Add the scores to the context
         username = self.request.user
-        if len(username) == 0 or not username:
-            return context
         
         score, created = Score.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')

@@ -59,6 +59,9 @@ def filter_country_gdf(local_gdf, country_name:str, DEBUG_FULL, DEBUG_INFO, lagu
     if country_name == '':
         return False, False
 
+    if country_name == 'world':
+        return local_gdf, 'World'
+
     if country_name in continents:
         if DEBUG_INFO: print(f"🔄 Listing all countries in {country_name}")
         world_gdf = local_gdf

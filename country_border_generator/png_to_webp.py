@@ -5,6 +5,15 @@ def convert_png_to_webp(img_path:str):
     """
     Convert a PNG image to a WEBP image.
     """
+    if not os.path.isfile(img_path):
+        raise FileNotFoundError(f'File {img_path} does not exist.')
+
+    # sanitize path
+    img_path = os.path.abspath(img_path)
+
+    if not img_path.lower().endswith('.png'):
+        raise ValueError(f'File {img_path} is not a PNG image.')
+    
     image = Image.open(img_path)
     output_path = img_path.rsplit('.', 1)[0] + '.webp'
     image.save(output_path, 'WEBP')
@@ -26,5 +35,5 @@ def convert_folders_png_to_webp(input_path:str):
 
 
 if __name__ == '__main__':
-    root_folder = "D:/VisualCode_Python/FlagdleDjango/Flagdle/assets"
-    convert_folders_png_to_webp(root_folder)
+    root_folder = "D:/VisualCode_Python/FlagdleDjango/Flagdle/assets/country/country_icon.png"
+    convert_png_to_webp(root_folder)

@@ -5,37 +5,43 @@
 {% block content %}
     <h1>Welcome to Flagdle</h1>
     <div class="button-grid">
-        <form class="game-button" action="/Flagdle/leaderboard/" method="get">
-            <button type="submit">
-                <img src="/static/country/Europe/icon.webp" alt="Leaderboard">
-                <span>Leaderboard</span>
-            </button>
-        </form>
+        <div class="info-grid">
+            <form class="game-button" action="/Flagdle/leaderboard/" method="get">
+                <button type="submit">
+                    <img src="/static/country/Leaderboard_icon.webp" alt="Leaderboard">
+                    <span>Leaderboard</span>
+                </button>
+            </form>
 
-        <form class="game-button" action="/Flagdle/flags/" method="get">
-            <button type="submit">
-                <img src="/static/country/Asie/icon.webp" alt="Encyclopédie des drapeaux">
-                <span>Encyclopédie des drapeaux</span>
-            </button>
-        </form>
+            <form class="game-button" action="/Flagdle/flags/" method="get">
+                <button type="submit">
+                    <img src="/static/country/flags_icon.webp" alt="Encyclopédie des drapeaux">
+                    <span>Encyclopédie des drapeaux</span>
+                </button>
+            </form>
 
-        <form class="game-button" action="/Flagdle/countries/" method="get">
-            <button type="submit">
-                <img src="/static/country/Afrique/icon.webp" alt="Encyclopédie des pays">
-                <span>Encyclopédie des pays</span>
-            </button>
-        </form>
-        {% if user.is_authenticated %}
-            {% for category in categories %}
-                <form class="game-button" action="{% url 'game' %}" method="get">
-                    <input type="hidden" name="category" value="{{ category }}">
-                    <button type="submit">
-                        <img src="% /assets/country/{category}/icon.webp %" alt="{{ category }}">
-                        <span>{{ category }}</span>
-                    </button>
-                </form>
-            {% endfor %}
-        {% endif %}
+            <form class="game-button" action="/Flagdle/countries/" method="get">
+                <button type="submit">
+                    <img src="/static/country/country_icon.webp" alt="Encyclopédie des pays">
+                    <span>Encyclopédie des pays</span>
+                </button>
+            </form>
+        </div>
+        <div class="vertical_delimiter"></div>
+        <div class="horizontal_delimiter"></div>
+        <div class="game-grid">
+            {% if user.is_authenticated %}
+                {% for category in categories %}
+                    <form class="game-button" action="{% url 'game' %}" method="get">
+                        <input type="hidden" name="category" value="{{ category }}">
+                        <button type="submit">
+                            <img src="/static/country/{{category}}/icon.webp" alt="{{ category }}">
+                            <span>{{ category }}</span>
+                        </button>
+                    </form>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
     {% if message %}
         <p>{{ message }}</p>

@@ -10,7 +10,7 @@ h2 {
     border-collapse: collapse;
     box-shadow: var(--box-shadow);
     background-color: var(--container-background);
-    border-radius: 15px;
+    border-radius: 25px;
     overflow: scroll;
 }
 
@@ -58,7 +58,6 @@ th, td {
     text-align: center;
     padding: 5px 1vw;
     user-select: text!important;
-    border-right: 1px solid var(--container-background-hover);
 }
 
 
@@ -72,12 +71,25 @@ th {
     border-bottom: 2px solid var(--acent-color);
 }
 
+th:first-child,
+td:first-child {
+    border-right: 1px solid var(--container-background-hover);
+}
+
 td {
     border-bottom: 1px solid var(--container-border-hover);
 }
 
 tr:last-child td {
     border-bottom: none;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
 }
 
 @media (max-width: 1200px) {
@@ -107,6 +119,7 @@ tr:last-child td {
         width: 98%;
         font-size: 0.5em;
         padding: 5px;
+        border-radius: 15px;
     }
 
 
