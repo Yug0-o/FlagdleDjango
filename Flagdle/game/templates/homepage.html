@@ -30,6 +30,7 @@
         <div class="vertical_delimiter"></div>
         <div class="horizontal_delimiter"></div>
         <div class="game-grid">
+            <h2>GAMES</h2>
             {% if user.is_authenticated %}
                 {% for category in categories %}
                     <form class="game-button" action="{% url 'game' %}" method="get">
@@ -40,6 +41,8 @@
                         </button>
                     </form>
                 {% endfor %}
+            {% else %}
+                <p>Connectez-vous pour jouer</p>
             {% endif %}
         </div>
     </div>
