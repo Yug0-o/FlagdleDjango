@@ -95,14 +95,6 @@
         top: calc(50% - 250px);
         height: 500px;
     }
-
-    .button-grid {
-        width: 800px;
-    }
-
-    .game-grid {
-        width: 125%;
-    }
 }
 
 @media (max-width: 900px) {
