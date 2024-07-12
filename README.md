@@ -9,4 +9,5 @@ A game about Geography
 - [X] Make the images larger.
 - [ ] Ensure a country does not repeat.
 - [ ] Obfuscate the names of the country images to prevent cheating.
+- [ ] Title with changing game name (Welcome to Flagdle, Welcome to Countrydle, ...).
 - [x] Add a leaderboard.

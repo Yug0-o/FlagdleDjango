@@ -47,7 +47,7 @@
     cursor: pointer;
     padding: 0 !important;
     border: 3px solid var(--container-border) !important;
-    border-radius: 35px !important;
+    border-radius: 80px !important;
 }
 
 .game-button button:hover {
@@ -55,18 +55,24 @@
     background-color: var(--container-background-hover)!important;
 }
 
+.game-button button:active {
+    border-color: var(--acent-color) !important;
+}
+
 .game-button img {
     width: 125px;
     height: 125px;
     margin: -2px;
     margin-right: 7%;
-    border-radius: 35px;
+    border-radius: 80px;
     color: var(--text-color);
+    box-shadow: var(--img-box-shadow);
+    user-select: none;
 }
 
 .game-button span {
     color: var(--text-color);
-    font-size: 1.25em;
+    font-size: 1.3em;
     width: calc(100% - 125px - 14%);
 }
 
@@ -81,7 +87,9 @@
  
 
 .horizontal_delimiter{
-    height: 450.83px;
+    height: 80%;
+    width: 4px;
+    margin: 0 10px;
 }
 
 .vertical_delimiter{

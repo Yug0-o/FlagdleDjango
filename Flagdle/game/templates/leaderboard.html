@@ -17,6 +17,7 @@
         <div class="user-control">
             <nav>
                 {% if user.is_authenticated %}
+                <span>{{user.username}}</span>
                 <a href="{% url 'logout' %}">Logout</a>
                 {% else %}
                 <a class="tds-icon-person" href="{% url 'login' %}">

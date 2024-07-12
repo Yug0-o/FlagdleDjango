@@ -16,6 +16,7 @@
         <div class="user-control">
             <nav>
                 {% if user.is_authenticated %}
+                <span>{{user.username}}</span>
                 <a href="{% url 'logout' %}">Logout</a>
                 {% else %}
                 <a class="tds-icon-person" href="{% url 'login' %}">
@@ -98,7 +99,18 @@
         </form>
 
         {% if message %}
-            <p>{{ message }}</p>
+            <p id="message">{{ message }}</p>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var messageElement = document.getElementById('message');
+                    if (messageElement.textContent.includes("Correct")) {
+                        messageElement.classList.add('success');
+                    } else {
+                        messageElement.classList.add('error');
+                    }
+                });
+            </script>
         {% endif %}
 
         <div class="image-game">
