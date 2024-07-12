@@ -96,7 +96,7 @@
     display: none;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 901px) {
     .info-grid,
     .horizontal_delimiter {
         position: sticky;
@@ -125,6 +125,7 @@
         width: 100%;
         max-width: 500px;
     }
+
 }
 @media (max-width: 550px) {
     .info-grid,
