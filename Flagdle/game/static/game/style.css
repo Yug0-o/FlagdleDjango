@@ -167,8 +167,16 @@ body {
 }
 
 h1 {
+    text-align: center;
     color: var(--text-color);
-    margin-top: 20px;
+    margin-inline: 15px;
+}
+
+h2 {
+    text-align: center;
+    color: var(--text-color);
+    margin-inline: 15px;
+    font-weight: 400;
 }
 
 form {

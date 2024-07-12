@@ -30,8 +30,9 @@
         <div class="vertical_delimiter"></div>
         <div class="horizontal_delimiter"></div>
         <div class="game-grid">
-            <h2>GAMES</h2>
+            
             {% if user.is_authenticated %}
+            <h2>GAMES</h2>
                 {% for category in categories %}
                     <form class="game-button" action="{% url 'game' %}" method="get">
                         <input type="hidden" name="category" value="{{ category }}">
