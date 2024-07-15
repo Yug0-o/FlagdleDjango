@@ -285,7 +285,6 @@ class LeaderboardView(TemplateView):
                     user_scores['total_best_score'] += best_score
 
                 leaderboard.append(user_scores)
-                print(user_scores)
 
         # Tri des utilisateurs par le score total décroissant
         leaderboard = sorted(leaderboard, key=lambda x: x['total_best_score'], reverse=True)
