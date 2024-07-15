@@ -10,6 +10,7 @@
     margin: 40px;
     width: 70%;
     min-width: 900px;
+    max-width: 1200px;
 }
 
 .info_grid,
@@ -28,6 +29,7 @@
     border-radius: 81px;
     background-color: var(--container-background);
     padding: 30px;
+    margin-bottom: 30PX;
 }
 
 .game_button {
@@ -38,7 +40,7 @@
     margin:0;
     padding: 0;
     width: 100%;
-    max-width: 450px;
+    /* max-width: 450px; */
     height:100%;
 }
 
@@ -54,7 +56,7 @@
     cursor: pointer;
     padding: 0 !important;
     border: 2px solid var(--container-border) !important;
-    border-radius: 51px !important;
+    border-radius: 100px !important;
 }
 
 .game_button button:hover {
@@ -64,6 +66,7 @@
 
 .game_button button:active {
     border-color: var(--acent-color) !important;
+    background-color: var(--container-background)!important;
 }
 
 .game_button img {
@@ -75,6 +78,12 @@
     color: var(--text-color);
     box-shadow: var(--img-box-shadow);
     user-select: none;
+    pointer-events: none;
+}
+
+.info_grid .game_button img {
+    width: 150px;
+    height: 150px;
 }
 
 .game_button span {
@@ -140,8 +149,8 @@
     }
 
     #game_grid {
-        border-radius: 51px;
-        padding: 10px;
+        border-radius: 71px;
+        /* padding: 10px; */
     }
 
     .game_button img {
@@ -149,14 +158,19 @@
         height: 75px;
     }
 
+    .info_grid .game_button img {
+        width: 100px;
+        height: 100px;
+    }
+
 }
-@media (max-width: 550px) {
+@media (max-width: 600px) {
     .info_grid,
     .game_grid {
         gap: 15px;
     }
 
-    .game_button span {
+    .game_grid .game_button span {
         font-size: 1em;
     }
 

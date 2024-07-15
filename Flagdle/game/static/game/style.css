@@ -60,14 +60,14 @@
     --text-secondary-color: oklch(89% 0 0);
     --inverted-text-color: oklch(20% 0 0);
     --acent-color: oklch(60% 0.2 144);
-    --hover-filter: saturate(1.1);
-    --active-filter: saturate(0.8) brightness(0.9);
+    --hover-filter: saturate(1.2);
+    --active-filter: saturate(1) brightness(0.9);
     --secondary-color: oklch(70% 0.2 25);
     --error-color: oklch(60% 0.18 25);
     --success-color: oklch(60% 0.2 144);
     --image-container-background: oklch(13.8% 0.031 281.56);
     --container-background: oklch(15% 0.01 276.61);
-    --container-background-hover: oklch(30% 0.01 144);
+    --container-background-hover: oklch(20% 0.005 250.61);
     --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
     --container-text-color: oklch(99.8% 0.031 281.56);
     --container-border: oklch(50% 0 0);
@@ -88,8 +88,8 @@
     --text-secondary-color: oklch(25% 0 0);
     --inverted-text-color: oklch(90% 0 0);
     --acent-color: oklch(70% 0.23 144);
-    --hover-filter: saturate(0.7);
-    --active-filter: saturate(1.1) brightness(0.9);
+    --hover-filter: saturate(1.2);
+    --active-filter: saturate(1) brightness(0.98);
     --secondary-color: oklch(40% 0.4 25);
     --error-color: oklch(50% 0.4 25);
     --success-color: oklch(70% 0.23 144);
