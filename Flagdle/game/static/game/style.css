@@ -25,7 +25,7 @@
 
 :root {
     --background-color: oklch(15% 0.004 308.21);
-    --background: var(--background-color);
+    --background: linear-gradient(0deg, oklch(10% 0.004 308.21), oklch(15% 0.04 144));
     --header-color: oklch(20% 0.004 308.21);
     --header-background: linear-gradient(0deg, oklch(15% 0.004 308.21 /0%), oklch(15% 0.004 308.21));
     --text-color: oklch(99% 0 0);
@@ -38,17 +38,17 @@
     --error-color: oklch(60% 0.18 25);
     --success-color: oklch(60% 0.2 144);
     --image-container-background: oklch(13.8% 0.031 281.56);
-    --container-background: oklch(20% 0.01 276.61);
+    --container-background: oklch(15% 0.01 276.61);
     --container-background-hover: oklch(30% 0.01 144);
     --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
     --container-text-color: oklch(99.8% 0.031 281.56);
     --container-border: oklch(50% 0 0);
     --container-border-hover: oklch(80% 0 0);
     --link-underlined-color: oklch(60% 0.18 144);
-    --box-shadow: none;
-    --hover-box-shadow: none;
-    --active-box-shadow: none;
-    --img-box-shadow: 2px 5px 10px oklch(0% 0.004 308.21 / 100%);
+    --box-shadow: 2px 5px 10px oklch(10% 0.004 308.21);
+    --hover-box-shadow: 2px 5px 15px oklch(10% 0.004 308.21), inset 0px 0px 0px oklch(10% 0.004 308.21);
+    --active-box-shadow: 0px 0px 0px oklch(10% 0.004 308.21), inset 5px 5px 10px oklch(10% 0.004 308.21);
+    --img-box-shadow: 2px 5px 10px oklch(0% 0.004 308.21);
 }
 
 .dark-theme {
