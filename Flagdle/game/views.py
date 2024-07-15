@@ -10,7 +10,7 @@ from django.views.generic import CreateView, TemplateView, FormView
 
 from .forms import GuessForm
 from .forms import SignUpForm
-from .models import Score
+from .models import BestScore, CurrentScore
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
@@ -36,7 +36,7 @@ class HomeView(TemplateView):
         return context
 
 
-def get_images_from_directory(directory):
+def get_countries_from_directory(directory):
     directory_path = os.path.join(ASSETS_DIR, 'country', directory)
     images = []
     if os.path.exists(directory_path):
@@ -44,6 +44,16 @@ def get_images_from_directory(directory):
             if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) and 'icon' not in filename:
                 filename_without_extension = os.path.splitext(filename)[0]
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
+    return images
+
+def get_flags_from_directory():
+    directory_path = os.path.join(ASSETS_DIR, 'flags')
+    images = []
+    if os.path.exists(directory_path):
+        for filename in os.listdir(directory_path):
+            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) and 'icon' not in filename:
+                filename_without_extension = os.path.splitext(filename)[0]
+                images.append((os.path.join('flags', filename), filename_without_extension))
     return images
 
 
@@ -54,38 +64,38 @@ class ImagesView(TemplateView):
         context = super().get_context_data(**kwargs)
         categories_image = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories_image[0])
-        context['images'] = get_images_from_directory(selected_category)
+        context['images'] = get_countries_from_directory(selected_category)
         context['categories'] = categories_image
         context['selected_category'] = selected_category
         return context
 
 
-class FullnameView(TemplateView):
+class FlagView(TemplateView):
     template_name = 'flags.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        directory_path = os.path.join(ASSETS_DIR, 'flags', 'fullname')
+        directory_path = os.path.join(ASSETS_DIR, 'flags')
         images = []
         for filename in os.listdir(directory_path):
             if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
                 filename_without_extension = os.path.splitext(filename)[0]
-                images.append((os.path.join('flags', 'fullname', filename), filename_without_extension))
+                images.append((os.path.join('flags', filename), filename_without_extension))
         context['images'] = images
         return context
 
 
-class GameView(LoginRequiredMixin, FormView):
-    template_name = 'game.html'
+class CountryGameView(LoginRequiredMixin, FormView):
+    template_name = 'country_game.html'
     login_url = 'login'  # URL to redirect if the user is not logged in
     form_class = GuessForm
-    success_url = reverse_lazy('game')
+    success_url = reverse_lazy('country_game')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
-        images = get_images_from_directory(selected_category)
+        images = get_countries_from_directory(selected_category)
 
         if not images:
             context['message'] = 'No images found in this category.'
@@ -99,11 +109,12 @@ class GameView(LoginRequiredMixin, FormView):
 
         # Add the scores to the context
         username = self.request.user
-        
-        score, created = Score.objects.get_or_create(username=username)
+
+        best_score, best_created = BestScore.objects.get_or_create(username=username)
+        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
-        context['current_score'] = getattr(score, f"{score_field_prefix}_current_score")
-        context['best_score'] = getattr(score, f"{score_field_prefix}_best_score")
+        context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
+        context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
 
         return context
 
@@ -123,23 +134,24 @@ class GameView(LoginRequiredMixin, FormView):
         username = self.request.user
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
-        score, created = Score.objects.get_or_create(username=username)
+        best_score, best_created = BestScore.objects.get_or_create(username=username)
+        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
-        current_score = getattr(score, current_score_field)
-        new_current_score = current_score + score_increment
-        setattr(score, current_score_field, new_current_score)
+        current_score_val = getattr(current_score, current_score_field, 0)
+        new_current_score = current_score_val + score_increment
+        setattr(current_score, current_score_field, new_current_score)
+        current_score.save()
 
-        best_score = getattr(score, best_score_field)
-        if new_current_score > best_score:
-            setattr(score, best_score_field, new_current_score)
+        best_score_val = getattr(best_score, best_score_field, 0)
+        if new_current_score > best_score_val:
+            setattr(best_score, best_score_field, new_current_score)
+            best_score.save()
 
-        score.save()
-
-        images = get_images_from_directory(selected_category)
+        images = get_countries_from_directory(selected_category)
         random_image = random.choice(images)
 
         return self.render_to_response(self.get_context_data(
@@ -152,19 +164,88 @@ class GameView(LoginRequiredMixin, FormView):
         ))
 
 
-@csrf_exempt
+class FlagsGameView(LoginRequiredMixin, FormView):
+    template_name = 'flag_game.html'
+    login_url = 'login'  # URL to redirect if the user is not logged in
+    form_class = GuessForm
+    success_url = reverse_lazy('flag_game')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        images = get_flags_from_directory()
+
+        if not images:
+            context['message'] = 'No images found in this category.'
+        else:
+            context['images'] = images
+            random_image = random.choice(images)
+            context['current_image'] = random_image[0]
+            context['correct_answer'] = random_image[1]
+
+        # Add the scores to the context
+        username = self.request.user
+
+        best_score, created = BestScore.objects.get_or_create(username=username)
+        current_score, created = CurrentScore.objects.get_or_create(username=username)
+        score_field_prefix = 'flag'.lower().replace('-', '_')
+        context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score")
+        context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score")
+
+        return context
+
+    def form_valid(self, form):
+        user_guess = form.cleaned_data['guess'].strip().lower()
+        correct_answer = form.cleaned_data['correct_answer'].strip().lower()
+        correct_answer_without_extension = os.path.splitext(correct_answer)[0]
+
+        if user_guess == correct_answer_without_extension:
+            message = "Correct!"
+            score_increment = 1
+        else:
+            message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
+            score_increment = 0
+
+        # Update the user's score
+        username = self.request.user
+        best_score, best_created = BestScore.objects.get_or_create(username=username)
+        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
+        score_field_prefix = 'flag'.lower().replace('-', '_')
+
+        current_score_field = f"{score_field_prefix}_current_score"
+        best_score_field = f"{score_field_prefix}_best_score"
+
+        current_score_val = getattr(current_score, current_score_field, 0)
+        new_current_score = current_score_val + score_increment
+        setattr(current_score, current_score_field, new_current_score)
+        current_score.save()
+
+        best_score_val = getattr(best_score, best_score_field, 0)
+        if new_current_score > best_score_val:
+            setattr(best_score, best_score_field, new_current_score)
+            best_score.save()
+
+        images = get_flags_from_directory()
+        random_image = random.choice(images)
+
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            current_image=random_image[0],
+            correct_answer=random_image[1],
+            message=message
+        ))
+
+
 # file deepcode ignore DisablesCSRFProtection: <not a security issue>
+@csrf_exempt
 def reset_current_score(request):
     if request.method == 'POST':
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie', 'Flag']
         username = request.user.username
-        if not username:
-            return JsonResponse({'status': 'Accepted'}, status=202)
 
         try:
-            score = Score.objects.get(username=username)
-        except Score.DoesNotExist:
-            score = Score(username=username)
+            score = CurrentScore.objects.get(username=username)
+        except CurrentScore.DoesNotExist:
+            score = CurrentScore(username=username)
 
         # Iterate over each category and reset the corresponding score
         for category in categories:
@@ -185,7 +266,7 @@ class LeaderboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-        scores = Score.objects.all()
+        scores = BestScore.objects.all()
 
         leaderboard = []
 

@@ -118,21 +118,31 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class Score(models.Model):
+class BestScore(models.Model):
     username = models.CharField(unique=True, max_length=150)
-    afrique_current_score = models.IntegerField(default=0)
     afrique_best_score = models.IntegerField(default=0)
-    amerique_current_score = models.IntegerField(default=0)
     amerique_best_score = models.IntegerField(default=0)
-    asie_current_score = models.IntegerField(default=0)
     asie_best_score = models.IntegerField(default=0)
-    europe_current_score = models.IntegerField(default=0)
     europe_best_score = models.IntegerField(default=0)
-    moyen_orient_current_score = models.IntegerField(default=0)
     moyen_orient_best_score = models.IntegerField(default=0)
-    oceanie_current_score = models.IntegerField(default=0)
     oceanie_best_score = models.IntegerField(default=0)
+    flag_best_score = models.IntegerField(default=0)
 
     class Meta:
-        managed = False
-        db_table = 'score_user'
+        managed = True
+        db_table = 'best_score_user'
+
+
+class CurrentScore(models.Model):
+    username = models.CharField(unique=True, max_length=150)
+    afrique_current_score = models.IntegerField(default=0)
+    amerique_current_score = models.IntegerField(default=0)
+    asie_current_score = models.IntegerField(default=0)
+    europe_current_score = models.IntegerField(default=0)
+    moyen_orient_current_score = models.IntegerField(default=0)
+    oceanie_current_score = models.IntegerField(default=0)
+    flag_current_score = models.IntegerField(default=0)
+
+    class Meta:
+        managed = True
+        db_table = 'current_score_user'

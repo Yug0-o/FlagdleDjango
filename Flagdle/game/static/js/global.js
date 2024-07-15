@@ -34,12 +34,12 @@ window.addEventListener('scroll', function () {
     lastScrollTop = scrollTop;
 });
 
-// Function to reset the score, only called if it's not game.html
+// Function to reset the score, only called if it's not country_game.html or flag_game.html
 function resetScore() {
-    if (!window.location.pathname.includes('game.html')) {
+    if (!window.location.pathname.includes('country_game', 'flag_game')) {
         $.ajax({
             type: 'POST',
-            url: "reset_current_score/",
+            url: "/reset_current_score",
             data: {
                 'category': '{{ selected_category }}',
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
