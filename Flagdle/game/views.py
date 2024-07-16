@@ -36,7 +36,7 @@ class HomeView(TemplateView):
         return context
 
 
-def get_countries_from_directory(directory):
+def get_countries_from_directory(directory:str) -> list[tuple[str, str]]:
     directory_path = os.path.join(ASSETS_DIR, 'country', directory)
     images = []
     if os.path.exists(directory_path):
@@ -46,7 +46,7 @@ def get_countries_from_directory(directory):
                 images.append((os.path.join('country', directory, filename), filename_without_extension))
     return images
 
-def get_flags_from_directory():
+def get_flags_from_directory() -> list[tuple[str, str]]:
     directory_path = os.path.join(ASSETS_DIR, 'flags')
     images = []
     if os.path.exists(directory_path):
