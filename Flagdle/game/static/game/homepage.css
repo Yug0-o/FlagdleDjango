@@ -42,6 +42,23 @@
     height:100%;
 }
 
+
+.game_button button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start !important;
+    overflow: hidden;
+    background-color: var(--container-background) !important;
+    width: 100%;
+    height: fit-content;
+    font-size: 20px !important;
+    cursor: pointer;
+    padding: 0 !important;
+    border: none!important;
+    border-radius: 100px !important;
+    position: relative;
+}
+
 @keyframes border_lightup {
     0% {
         border-color: transparent;
@@ -76,22 +93,6 @@
     }
 }
 
-.game_button button {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start !important;
-    overflow: hidden;
-    background-color: var(--container-background) !important;
-    width: 100%;
-    height: fit-content;
-    font-size: 20px !important;
-    cursor: pointer;
-    padding: 0 !important;
-    border: none!important;
-    border-radius: 100px !important;
-    position: relative;
-}
-
 .game_button button::before {
     content: '';
     position: absolute;
@@ -99,14 +100,14 @@
     left: -1px;
     right: -1px;
     bottom: -1px;
-    border: 3px solid transparent;
+    border: 4px solid transparent;
     border-radius: inherit;
     box-sizing: border-box;
     pointer-events: none;
 }
 
 .game_button button:hover::before {
-    animation: border_lightup 0.15s forwards;
+    animation: border_lightup 0.1s forwards;
 }
 
 .game_button button:hover {
@@ -120,7 +121,7 @@
 }
 
 .game_button button:active::before {
-    animation: border_lightup 0.15s forwards;
+    animation: border_lightup 0.1s forwards;
 }
 
 .game_button img {
