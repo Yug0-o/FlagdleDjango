@@ -87,6 +87,15 @@
             </button>
         </div>
     </header>
+     <form method="get" action="">
+        <label for="category">Choose a category:</label>
+        <select name="category" id="category" onchange="this.form.submit()">
+            {% for category in categories %}
+                <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
     <div class="flag-container">
         {% for image, filename in images %}
             <div class="flag-item">

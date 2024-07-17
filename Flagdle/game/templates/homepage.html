@@ -8,14 +8,14 @@
         <div class="info_grid">
             <form class="game_button" action="/Flagdle/leaderboard/" method="get">
                 <button type="submit">
-                    <img src="/static/country/Leaderboard_icon.webp" alt="Leaderboard">
+                    <img src="/static/leaderboard_icon.webp" alt="Leaderboard">
                     <span>Leaderboard</span>
                 </button>
             </form>
 
             <form class="game_button" action="/Flagdle/flags/" method="get">
                 <button type="submit">
-                    <img src="/static/country/flags_icon.webp" alt="Encyclopédie des drapeaux">
+                    <img src="/static/flags/flags_icon.webp" alt="Encyclopédie des drapeaux">
                     <span>Encyclopédie des drapeaux</span>
                 </button>
             </form>
@@ -49,14 +49,16 @@
 
             <!-- <div class="vertical_delimiter"></div> -->
             <div class="game_grid" id="game_grid">
-            <h2>FLAGDLE</h2>
-                <form class="game_button" action="{% url 'flag_game' %}" method="get">
-                    <input type="hidden">
-                    <button type="submit">
-                        <img src="/static/country/flags_icon.webp" alt="Encyclopédie des drapeaux">
-                        <span>Le Monde</span>
-                    </button>
-                </form>
+                <h2>FLAGDLE</h2>
+                    {% for flag_category in flag_categories %}
+                        <form class="game_button" action="{% url 'flag_game' %}" method="get">
+                            <input type="hidden" name="flag_category" value="{{ flag_category }}">
+                            <button type="submit">
+                                <img src="/static/flags/{{flag_category}}/icon.webp" alt="{{ flag_category }}">
+                                <span>{{ flag_category }}</span>
+                            </button>
+                        </form>
+                    {% endfor %}
             </div>
             {% else %}
                 <p>Connectez-vous pour jouer</p>

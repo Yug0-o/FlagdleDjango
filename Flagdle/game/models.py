@@ -126,7 +126,8 @@ class BestScore(models.Model):
     europe_best_score = models.IntegerField(default=0)
     moyen_orient_best_score = models.IntegerField(default=0)
     oceanie_best_score = models.IntegerField(default=0)
-    flag_best_score = models.IntegerField(default=0)
+    world_best_score = models.IntegerField(default=0)
+    pride_best_score = models.IntegerField(default=0)
 
     class Meta:
         managed = True
@@ -141,7 +142,8 @@ class CurrentScore(models.Model):
     europe_current_score = models.IntegerField(default=0)
     moyen_orient_current_score = models.IntegerField(default=0)
     oceanie_current_score = models.IntegerField(default=0)
-    flag_current_score = models.IntegerField(default=0)
+    world_current_score = models.IntegerField(default=0)
+    pride_current_score = models.IntegerField(default=0)
 
     class Meta:
         managed = True

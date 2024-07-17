@@ -33,27 +33,18 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+        context['flag_categories'] = ['World', 'Pride']
         return context
 
 
-def get_countries_from_directory(directory:str) -> list[tuple[str, str]]:
-    directory_path = os.path.join(ASSETS_DIR, 'country', directory)
+def get_from_directory(directory, subdirectory):
+    directory_path = os.path.join(ASSETS_DIR, directory, subdirectory)
     images = []
     if os.path.exists(directory_path):
         for filename in os.listdir(directory_path):
             if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) and 'icon' not in filename:
                 filename_without_extension = os.path.splitext(filename)[0]
-                images.append((os.path.join('country', directory, filename), filename_without_extension))
-    return images
-
-def get_flags_from_directory() -> list[tuple[str, str]]:
-    directory_path = os.path.join(ASSETS_DIR, 'flags')
-    images = []
-    if os.path.exists(directory_path):
-        for filename in os.listdir(directory_path):
-            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')) and 'icon' not in filename:
-                filename_without_extension = os.path.splitext(filename)[0]
-                images.append((os.path.join('flags', filename), filename_without_extension))
+                images.append((os.path.join(ASSETS_DIR, directory, subdirectory, filename), filename_without_extension))
     return images
 
 
@@ -64,7 +55,7 @@ class ImagesView(TemplateView):
         context = super().get_context_data(**kwargs)
         categories_image = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories_image[0])
-        context['images'] = get_countries_from_directory(selected_category)
+        context['images'] = get_from_directory("country", selected_category)
         context['categories'] = categories_image
         context['selected_category'] = selected_category
         return context
@@ -75,13 +66,11 @@ class FlagView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        directory_path = os.path.join(ASSETS_DIR, 'flags')
-        images = []
-        for filename in os.listdir(directory_path):
-            if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-                filename_without_extension = os.path.splitext(filename)[0]
-                images.append((os.path.join('flags', filename), filename_without_extension))
-        context['images'] = images
+        categories_image = ['World', 'Pride']
+        selected_category = self.request.GET.get('category', categories_image[0])
+        context['images'] = get_from_directory("flags", selected_category)
+        context['categories'] = categories_image
+        context['selected_category'] = selected_category
         return context
 
 
@@ -95,7 +84,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
-        images = get_countries_from_directory(selected_category)
+        images = get_from_directory("country", selected_category)
 
         if not images:
             context['message'] = 'No images found in this category.'
@@ -151,7 +140,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
             setattr(best_score, best_score_field, new_current_score)
             best_score.save()
 
-        images = get_countries_from_directory(selected_category)
+        images = get_from_directory("country", selected_category)
         random_image = random.choice(images)
 
         return self.render_to_response(self.get_context_data(
@@ -172,11 +161,15 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        images = get_flags_from_directory()
+        flag_categories = ['World', 'Pride']
+        selected_category = self.request.GET.get('flag_category', flag_categories[0])
+        images = get_from_directory("flags", selected_category)
 
         if not images:
             context['message'] = 'No images found in this category.'
         else:
+            context['flag_categories'] = flag_categories
+            context['selected_category'] = selected_category
             context['images'] = images
             random_image = random.choice(images)
             context['current_image'] = random_image[0]
@@ -185,11 +178,11 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         # Add the scores to the context
         username = self.request.user
 
-        best_score, created = BestScore.objects.get_or_create(username=username)
-        current_score, created = CurrentScore.objects.get_or_create(username=username)
-        score_field_prefix = 'flag'.lower().replace('-', '_')
-        context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score")
-        context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score")
+        best_score, best_created = BestScore.objects.get_or_create(username=username)
+        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
+        score_field_prefix = selected_category.lower().replace('-', '_')
+        context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
+        context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
 
         return context
 
@@ -207,9 +200,11 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
+        flag_categories = ['World', 'Pride']
+        selected_category = self.request.GET.get('flag_category', flag_categories[0])
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-        score_field_prefix = 'flag'.lower().replace('-', '_')
+        score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
@@ -224,11 +219,13 @@ class FlagsGameView(LoginRequiredMixin, FormView):
             setattr(best_score, best_score_field, new_current_score)
             best_score.save()
 
-        images = get_flags_from_directory()
+        images = get_from_directory("flags", selected_category)
         random_image = random.choice(images)
 
         return self.render_to_response(self.get_context_data(
             form=form,
+            flag_categories=flag_categories,
+            selected_category=selected_category,
             current_image=random_image[0],
             correct_answer=random_image[1],
             message=message
@@ -239,7 +236,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 @csrf_exempt
 def reset_current_score(request):
     if request.method == 'POST':
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie', 'Flag']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie', 'World', 'Pride']
         username = request.user.username
 
         try:
@@ -265,7 +262,7 @@ class LeaderboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie', 'Flag']
+        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie', 'World', 'Pride']
         scores = BestScore.objects.all()
 
         leaderboard = []
