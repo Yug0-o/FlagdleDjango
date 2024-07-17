@@ -3,6 +3,11 @@ import geopandas as gpd
 import pandas as pd
 import os
 
+import sys
+sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
+
+import Base64EncoderDecoder as utf8_To_b64
+
 country_folder = "Flagdle/assets/country"
 continents = os.listdir(country_folder)
 
@@ -69,8 +74,12 @@ def filter_country_gdf(local_gdf, country_name:str, DEBUG_FULL, DEBUG_INFO, lagu
         # loop through the countries of each continent in country_path
         continent_gdf = []
         for country in os.listdir(f"{country_folder}/{continent_name}"):
-            if country == "icon.png":
+            if 'icon' in country:
                 continue
+
+            country_name, extension = os.path.splitext(country)
+            country = utf8_To_b64.base64_to_utf8(country_name) + '.' + extension
+            
             # add each country's gdf to the continent_gdf
             country_gdf, country_full_name = filter_country_gdf(world_gdf, country.split('.')[0], DEBUG_FULL, DEBUG_INFO, laguage=laguage)
             if country_full_name != False:
@@ -79,6 +88,10 @@ def filter_country_gdf(local_gdf, country_name:str, DEBUG_FULL, DEBUG_INFO, lagu
             else:
                 if DEBUG_INFO: print(f"\t-❌ {country} not found in the world")
 
+        if DEBUG_INFO: print(f"🔄 Combining all countries in {continent_name}...")
+        if len(continent_gdf) == 0:
+            return False, False
+        
         continent_gdf = gpd.GeoDataFrame(pd.concat(continent_gdf, ignore_index=True))
 
         return continent_gdf, continent_name

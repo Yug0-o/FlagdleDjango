@@ -4,11 +4,18 @@ import matplotlib.pyplot as plt
 import threading
 import os
 
+import sys
+sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
+
 import GeojsonToOrthographicProjection as gtop
 import png_to_webp as ptw
+import Base64EncoderDecoder as utf8_To_b64
 
-DEBUG_FULL = False
-DEBUG_INFO = True
+global BASE10decoding, BASE10encoding
+
+DEBUG_INFO = 1
+DEBUG_FULL = 0
+
 data_path = 'country_border_generator/custom.geojson'
 if DEBUG_INFO: print(f"\n🔄 Loading Geojson '{data_path}'...")
 World_gdf = gpd.read_file(data_path)
@@ -75,9 +82,10 @@ def CountryName_to_image(country_name:str, save_path='', gdf=World_gdf):
         plt.axis('off')
         plt.tight_layout(pad=0)
         plt.show(block=True)
-    else:
+    else:    
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
-        ptw.convert_png_to_webp(save_path)
+        # file deepcode ignore PT: <sanitazing isn't detected>
+        ptw.convert_png_to_webp(save_path, BASE10decoding=BASE10decoding, BASE10encoding=BASE10encoding)
 
     plt.close()
         
@@ -118,9 +126,18 @@ def update_folder(country_folder:str, folder:str):
     Update the country borders of the images in the folder.
     """
     if DEBUG_INFO: print(f"\n🔄 Updating folder {folder}...")
+
+    # update the icon first
+    update_image("icon", folder, "icon.png")
+    
     for image in os.listdir(os.path.join(country_folder, folder)):
-        country_name = image.split(".")[0]
-        update_image(country_name, folder, image)
+        if "icon" not in image:
+            country_name, extension = image.split(".")
+            if BASE10decoding:
+                country_name = utf8_To_b64.base64_to_utf8(country_name)
+                image = f"{country_name}.{extension}"
+                
+            update_image(country_name, folder, image)
 
 
 def auto_update_countries(country_folder:str, threaded:bool=False):
@@ -132,7 +149,11 @@ def auto_update_countries(country_folder:str, threaded:bool=False):
 
     if DEBUG_INFO: print("🔄 Country border updater initialized.")
 
+    
     for folder in os.listdir(country_folder):
+        if '.' in folder:
+            continue
+        
         if threaded:
             thread = threading.Thread(target=update_folder, args=(country_folder, folder))
             thread.start()
@@ -165,16 +186,22 @@ def manual_update_countries():
             print("File not found.")
             continue
         
-        elif not target_file.endswith('.png'):
-            print("Invalid file format. Please provide a PNG file.")
-            continue
+        path, old_country_name = os.path.split(target_file)
 
-        country_name = target_file.split('\\')[-1].split('.')[0]
+        old_country_name, extension = old_country_name.split(".")
+
+        if BASE10decoding:
+            country_name = utf8_To_b64.base64_to_utf8(old_country_name)
+            print(f"\nDecoded {old_country_name} -> {country_name}.")
+        else:
+            country_name = old_country_name
+
+        target_file = os.path.join(path, f"{country_name}.{extension}")
         
         print(f"\n🔄 Searching for '{country_name}'...")
         
-        if gtop.filter_country_gdf(World_gdf, country_name)[1] == False:
-            print("Country not found.\n")
+        if gtop.filter_country_gdf(World_gdf, country_name, DEBUG_FULL=DEBUG_FULL, DEBUG_INFO=DEBUG_INFO)[1] == False:
+            print("\t ❌Country not found.\n")
             
             manual_update = input("Would you like to manually update the country? (Y/n)\n> ")
             if manual_update.lower() == 'n':
@@ -216,8 +243,10 @@ def manual_update_countries():
         print(f"✅ {country_name} found.")
         print(f"🔄 Updating {country_name}...")
         
-        if CountryName_to_image(country_name, target_file):
+        if CountryName_to_image(country_name, target_file.replace('.webp', '.png')):
             print(f"✅ Updated {country_name}")
+            if BASE10encoding:
+                print(f"Saved as {utf8_To_b64.utf8_to_base64(country_name)}.webp")
         else: 
             print(f"❌ Failed to update {country_name}")
 
@@ -249,6 +278,10 @@ def plot_countries():
 
 if __name__ == '__main__':
     while True :
+        BASE10decoding = int(input("\nEnter 1 to decode filenames (Base64 to utf-8), 0 otherwise:\n> "))
+        BASE10encoding = int(input("\nEnter 1 to save files as base64 encoded, 0 otherwise:\n> "))
+        print(f"\nBase64 decoding is {'✅ enabled' if BASE10decoding else '❌ disabled'}")
+        print(f"Base64 encoding is {'✅ enabled' if BASE10encoding else '❌ disabled'}\n")
         choice = input("\n1: Auto-update\n2: Manual-update\n3: Simple-plot\n4: quit\n> ")
         if choice == '1':
             auto_update_countries(country_folder, False)
