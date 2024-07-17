@@ -45,8 +45,8 @@
 
 .game_button button {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start !important;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     background-color: var(--container-background) !important;
     width: 100%;
@@ -127,9 +127,8 @@
 .game_button img {
     width: 100px;
     height: 100px;
-    margin: -2px;
-    margin-right: 7%;
     border-radius: 80px;
+    align-self: center;
     color: var(--text-color);
     box-shadow: var(--img-box-shadow);
     user-select: none;
@@ -142,9 +141,11 @@
 }
 
 .game_button span {
+    flex-grow: 1;
+    text-align: center;
     color: var(--text-color);
     font-size: 1.3em;
-    width: calc(100% - 125px - 14%);
+    margin-right: 100px;
 }
 
 .clickable {
@@ -174,6 +175,10 @@
     height: 400px;
 }
 
+
+.info_grid .game_button span {
+    margin-right: 0;
+}
 
 @media (max-width: 1000px) {
     .info_grid,
