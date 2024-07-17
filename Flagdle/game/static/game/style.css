@@ -24,31 +24,31 @@
 
 
 :root {
-    --background-color: oklch(15% 0.004 308.21);
-    --background: linear-gradient(0deg, oklch(10% 0.004 308.21), oklch(15% 0.04 144));
-    --header-color: oklch(20% 0.004 308.21);
-    --header-background: linear-gradient(0deg, oklch(15% 0.004 308.21 /0%), oklch(15% 0.004 308.21));
-    --text-color: oklch(99% 0 0);
-    --text-secondary-color: oklch(89% 0 0);
-    --inverted-text-color: oklch(20% 0 0);
-    --acent-color: oklch(60% 0.2 144);
-    --hover-filter: saturate(1.1);
-    --active-filter: saturate(0.8) brightness(0.9);
-    --secondary-color: oklch(70% 0.2 25);
-    --error-color: oklch(60% 0.18 25);
-    --success-color: oklch(60% 0.2 144);
-    --image-container-background: oklch(13.8% 0.031 281.56);
-    --container-background: oklch(15% 0.01 276.61);
-    --container-background-hover: oklch(30% 0.01 144);
-    --stakable-container-background: oklch(10% 0.01 276.61 / 40%);
-    --container-text-color: oklch(99.8% 0.031 281.56);
+    --background-color: oklch(50% 0 0);
+    --background: linear-gradient(0deg, oklch(50% 0 0), oklch(50% 0 0));
+    --header-color: oklch(50% 0 0);
+    --header-background: linear-gradient(0deg, oklch(50% 0 0 /0%), oklch(50% 0 0));
+    --text-color: oklch(50% 0 0);
+    --text-secondary-color: oklch(50% 0 0);
+    --inverted-text-color: oklch(50% 0 0);
+    --acent-color: oklch(50% 0 0);
+    --hover-filter: saturate(1);
+    --active-filter: saturate(1) brightness(1);
+    --secondary-color: oklch(50% 0 0);
+    --error-color: oklch(50% 0 0);
+    --success-color: oklch(50% 0 0);
+    --image-container-background: oklch(50% 0 0);
+    --container-background: oklch(50% 0 0);
+    --container-background-hover: oklch(50% 0 0);
+    --stakable-container-background: oklch(50% 0 0 / 40%);
+    --container-text-color: oklch(50% 0 0);
     --container-border: oklch(50% 0 0);
-    --container-border-hover: oklch(80% 0 0);
-    --link-underlined-color: oklch(60% 0.18 144);
-    --box-shadow: 2px 5px 10px oklch(10% 0.004 308.21);
-    --hover-box-shadow: 2px 5px 15px oklch(10% 0.004 308.21), inset 0px 0px 0px oklch(10% 0.004 308.21);
-    --active-box-shadow: 0px 0px 0px oklch(10% 0.004 308.21), inset 5px 5px 10px oklch(10% 0.004 308.21);
-    --img-box-shadow: 2px 5px 10px oklch(0% 0.004 308.21);
+    --container-border-hover: oklch(50% 0 0);
+    --link-underlined-color: oklch(50% 0 0);
+    --box-shadow: 2px 5px 10px oklch(50% 0 0);
+    --hover-box-shadow: 2px 5px 15px oklch(50% 0 0), inset 0px 0px 0px oklch(50% 0 0);
+    --active-box-shadow: 0px 0px 0px oklch(50% 0 0), inset 5px 5px 10px oklch(50% 0 0);
+    --img-box-shadow: 2px 5px 10px oklch(50% 0 0);
 }
 
 .dark-theme {
@@ -190,6 +190,12 @@ h2 {
     font-weight: 400;
 }
 
+img {
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -208,20 +214,12 @@ select {
     font-size: 16px;
 }
 
-.vertical_delimiter {
-    width: 80%;
+.delimiter {
+    width: 3px;
     height: 3px;
     background-color: var(--container-border);
     border-radius: 10px;
-    margin: 20px 0;
-}
-
-.horizontal_delimiter {
-    width: 3px;
-    height: 80%;
-    background-color: var(--container-border);
-    border-radius: 10px;
-    margin: 0 20px;
+    margin: 20px 20px;
 }
 
 .image-grid {

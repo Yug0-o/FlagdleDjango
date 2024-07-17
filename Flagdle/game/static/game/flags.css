@@ -12,7 +12,7 @@
 
 .flag-container {
     display: flex;
-    padding-inline: 10vw;
+    padding-inline: 5vw;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;

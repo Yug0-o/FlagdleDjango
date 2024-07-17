@@ -60,7 +60,7 @@ function resetScore() {
 // Initial page load
 window.onload = function () {
     // Theme management
-    const storedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme');
+    const storedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme') || "light-theme";
     body.classList.add(storedTheme);
     localStorage.setItem('theme', storedTheme);
 

@@ -3,12 +3,13 @@
     flex-direction: row;
     align-items: flex-start;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 30px;
     margin: 40px;
-    width: 70%;
-    min-width: 900px;
-    max-width: 1200px;
+    width: 100%;
+    padding-inline: 50px;
+    /* min-width: 900px; */
+    /* max-width: 1200px; */
 }
 
 .info_grid,
@@ -20,6 +21,10 @@
     justify-content: center;
     gap: 30px;
     width: 100%;
+}
+
+.info_grid {
+    max-width: 500px;
 }
 
 #game_grid {
@@ -57,6 +62,7 @@
     border: none!important;
     border-radius: 100px !important;
     position: relative;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)!important;
 }
 
 @keyframes border_lightup {
@@ -131,8 +137,6 @@
     align-self: center;
     color: var(--text-color);
     box-shadow: var(--img-box-shadow);
-    user-select: none;
-    pointer-events: none;
 }
 
 .info_grid .game_button img {
@@ -146,6 +150,7 @@
     color: var(--text-color);
     font-size: 1.3em;
     margin-right: 100px;
+    padding-inline: 10px;
 }
 
 .clickable {
@@ -158,18 +163,16 @@
 }
  
 
-.horizontal_delimiter{
+.delimiter{
     height: 80%;
     width: 4px;
     margin: 0 10px;
+    transition: all 0.2s ease;
 }
 
-#button_grid-vertical_delimiter{
-    display: none;
-}
 
 .info_grid,
-.horizontal_delimiter {
+.delimiter {
     position: sticky;
     top: calc(50% - 250px);
     height: 400px;
@@ -182,9 +185,13 @@
 
 @media (max-width: 1000px) {
     .info_grid,
-    .horizontal_delimiter {
+    .delimiter {
         position: relative;
         height: auto;
+    }
+
+    .info_grid {
+        max-width: 100%;
     }
 
     .button_grid {
@@ -192,15 +199,17 @@
         align-items: center;
         gap: 15px;
         width: 90%;
-        max-width: 550px;
+        /* max-width: 550px; */
         min-width: 30%;
-    }
-    .horizontal_delimiter {
-        display: none;
+        padding-inline: 0px;
     }
 
-    #button_grid-vertical_delimiter {
-        display: block;
+    .delimiter {
+        transform: rotate(90deg);
+        --lenght: 80vw;
+        height: var(--lenght);
+        width: 3px;
+        margin: calc(var(--lenght)/-2 + 8px) 0;
     }
 
     .game_button {
@@ -210,7 +219,6 @@
 
     #game_grid {
         border-radius: 71px;
-        /* padding: 10px; */
     }
 
     .game_button img {
@@ -234,8 +242,8 @@
         font-size: 1em;
     }
 
-    #button_grid-vertical_delimiter {
-        width: 90%;
+    .delimiter {
+        --lenght: 70vw;
     }
 
 }
