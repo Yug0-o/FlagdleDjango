@@ -13,12 +13,21 @@ def convert_png_to_webp(img_path:str,BASE32decoding=0, BASE32encoding=0):
     if not os.path.isfile(img_path):
         raise FileNotFoundError(f'File {img_path} does not exist.')
 
+    if 'icon' in img_path:
+        return
+
     # sanitize path
     img_path = os.path.abspath(img_path)
     
     image = Image.open(img_path)
 
-    output_path = img_path.rsplit('.', 1)[0] + '.webp'
+    if BASE32decoding:
+        path, filename = os.path.split(img_path)
+        filename = filename.rsplit('.', 1)[0]
+        filename = base32_to_utf8(filename)
+        output_path = os.path.join(path, filename + '.webp')
+    else:
+        output_path = img_path.rsplit('.', 1)[0] + '.webp'
     
     image.save(output_path, 'WEBP')
 
