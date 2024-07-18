@@ -1,0 +1,21 @@
+Dassault Mirage F.1
+Dassault Super Étendard
+Dassault Mirage III
+Dassault Mirage III.V
+IAMI Azarakhsh
+IAMI Saeqeh
+Lockheed X-27
+Shenyang J-8
+Mikoyan-Gurevich MiG-21 Fishbed
+Mikoyan-Gurevich MiG-23 Flogger
+Mikoyan-Gurevich MiG-25 Foxbat
+Mikoyan MiG-27
+Sukhoi Su-15 Flagon
+Sukhoi Su-17 Fitter
+Tupolev Tu-28 Fiddler
+McDonnell Douglas F-4 Phantom II
+Northrop F-5
+General Dynamics F-111
+Grumman F-14A Tomcat
+Grumman F-14B Tomcat
+Boeing B-52 Stratofortress

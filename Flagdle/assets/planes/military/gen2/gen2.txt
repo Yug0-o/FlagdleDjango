@@ -1,0 +1,22 @@
+Avro Arrow
+Dassault Étendard IV
+HAL HF-24 Marut
+Helwan HA-300
+Saab Draken
+Mikoyan-Gurevich MiG-19 Farmer
+Mikoyan-Gurevich MiG-21 Fishbed
+Sukhoi Su-7 Fitter-A
+Sukhoi Su-9/Su-11 Fishpot
+English Electric Lightning
+De Havilland Sea Vixen
+de Havilland Venom
+Gloster Javelin
+Chance-Vought F-8 Crusader
+Grumman F-11 Tiger
+North American F-100 Super Sabre
+Convair F-102 Delta Dagger
+Lockheed F-104 Starfighter
+Republic F-105 Thunderchief
+Convair F-106 Delta Dart
+Aerfer Ariete
+Aerfer Sagittario 2

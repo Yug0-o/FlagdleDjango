@@ -1,0 +1,38 @@
+Dassault Rafale A
+Dassault Rafale B
+Dassault Rafale C
+Dassault Rafale M
+JF-17 Thunder Block III
+Chengdu J-10
+Shenyang J-11 Flanker-L
+Shenyang J-15 Flanker-X2
+Shenyang J-16 Hidden Dragon
+Mikoyan MiG-33
+Mikoyan-Gurevich MiG-35
+Sukhoi Su-30 Flanker-C
+Sukhoi Su-35 Flanker-E
+Sukhoi Su-37 Flanker-F
+Sukhoi Su-32 Fullback /Su-34 Fullback
+Sukhoi Su-30MKI
+Sukhoi Su-30MKM
+Sukhoi Su-30MKK Flanker-G
+Saab JAS 39 Gripen
+Eurofighter Typhoon
+British Aerospace EAP (Encore Au Parking)
+Boeing F-15E Strike Eagle
+Boeing F-15EX Strike Eagle II
+Boeing F-15SE Silent Eagle
+McDonnell Douglas F-15 S/MTD
+F-15I Ra'am
+F-15K Slam Eagle
+HAL Tejas
+Lockheed Martin F-16E / F-16F Desert Falcon
+Lockheed Martin F-16V Block 70/ Block72
+Lockheed Martin F-16I Sufa
+Lockheed Martin F-16XL
+General Dynamics NF-16D / X-62 VISTA
+Boeing F/A-18 Super Hornet
+F-18 High Alpha Research Vehicle
+Grumman X-29
+Mitsubishi F-2
+AIDC F-CK-1 Ching-kuo
