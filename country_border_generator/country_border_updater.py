@@ -9,9 +9,9 @@ sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
 
 import GeojsonToOrthographicProjection as gtop
 import png_to_webp as ptw
-import Base64EncoderDecoder as utf8_To_b64
+from Base32EncoderDecoder import utf8_to_base32, base32_to_utf8
 
-global BASE10decoding, BASE10encoding
+global BASE32decoding, BASE32encoding
 
 DEBUG_INFO = 1
 DEBUG_FULL = 0
@@ -85,7 +85,7 @@ def CountryName_to_image(country_name:str, save_path='', gdf=World_gdf):
     else:    
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
         # file deepcode ignore PT: <sanitazing isn't detected>
-        ptw.convert_png_to_webp(save_path, BASE10decoding=BASE10decoding, BASE10encoding=BASE10encoding)
+        ptw.convert_png_to_webp(save_path, BASE32decoding=BASE32decoding, BASE32encoding=BASE32encoding)
 
     plt.close()
         
@@ -133,9 +133,9 @@ def update_folder(country_folder:str, folder:str):
     for image in os.listdir(os.path.join(country_folder, folder)):
         if "icon" not in image:
             country_name, extension = image.split(".")
-            if BASE10decoding:
-                country_name = utf8_To_b64.base64_to_utf8(country_name)
-                image = f"{country_name}.{extension}"
+            if BASE32decoding:
+                country_name = base32_to_utf8(country_name)
+                image = f"{country_name}.png"
                 
             update_image(country_name, folder, image)
 
@@ -190,8 +190,8 @@ def manual_update_countries():
 
         old_country_name, extension = old_country_name.split(".")
 
-        if BASE10decoding:
-            country_name = utf8_To_b64.base64_to_utf8(old_country_name)
+        if BASE32decoding:
+            country_name = base32_to_utf8(old_country_name)
             print(f"\nDecoded {old_country_name} -> {country_name}.")
         else:
             country_name = old_country_name
@@ -245,8 +245,8 @@ def manual_update_countries():
         
         if CountryName_to_image(country_name, target_file.replace('.webp', '.png')):
             print(f"✅ Updated {country_name}")
-            if BASE10encoding:
-                print(f"Saved as {utf8_To_b64.utf8_to_base64(country_name)}.webp")
+            if BASE32encoding:
+                print(f"Saved as {utf8_to_base32(country_name)}.webp")
         else: 
             print(f"❌ Failed to update {country_name}")
 
@@ -278,10 +278,10 @@ def plot_countries():
 
 if __name__ == '__main__':
     while True :
-        BASE10decoding = int(input("\nEnter 1 to decode filenames (Base64 to utf-8), 0 otherwise:\n> "))
-        BASE10encoding = int(input("\nEnter 1 to save files as base64 encoded, 0 otherwise:\n> "))
-        print(f"\nBase64 decoding is {'✅ enabled' if BASE10decoding else '❌ disabled'}")
-        print(f"Base64 encoding is {'✅ enabled' if BASE10encoding else '❌ disabled'}\n")
+        BASE32decoding = int(input("\nEnter 1 to decode filenames (Base32 to utf-8), 0 otherwise:\n> "))
+        BASE32encoding = int(input("\nEnter 1 to save files as Base32 encoded, 0 otherwise:\n> "))
+        print(f"\nBase32 decoding is {'✅ enabled' if BASE32decoding else '❌ disabled'}")
+        print(f"Base32 encoding is {'✅ enabled' if BASE32encoding else '❌ disabled'}\n")
         choice = input("\n1: Auto-update\n2: Manual-update\n3: Simple-plot\n4: quit\n> ")
         if choice == '1':
             auto_update_countries(country_folder, False)

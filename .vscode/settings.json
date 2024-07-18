@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./Flagdle/game"
+        "./Flagdle/game",
+        "./country_border_generator"
     ]
 }

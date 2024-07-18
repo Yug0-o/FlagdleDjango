@@ -10,7 +10,7 @@ from django.views.generic import CreateView, TemplateView, FormView
 
 from .forms import GuessForm, SignUpForm
 from .models import BestScore, CurrentScore
-from .Base64EncoderDecoder import base64_to_utf8
+from .Base32EncoderDecoder import base32_to_utf8
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
@@ -58,7 +58,7 @@ class ImagesView(TemplateView):
         images = get_from_directory("country", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         context['images'] = transformed_images
         context['categories'] = categories_image
@@ -76,7 +76,7 @@ class FlagView(TemplateView):
         images = get_from_directory("flags", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         context['images'] = transformed_images
         context['categories'] = categories_image
@@ -97,7 +97,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
         images = get_from_directory("country", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         if not transformed_images:
             context['message'] = 'No images found in this category.'
@@ -156,7 +156,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
         images = get_from_directory("country", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         random_image = random.choice(transformed_images)
 
@@ -183,7 +183,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         images = get_from_directory("flags", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         if not transformed_images:
             context['message'] = 'No images found in this category.'
@@ -242,7 +242,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         images = get_from_directory("flags", selected_category)
 
         # Transform filenames
-        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
         random_image = random.choice(transformed_images)
 

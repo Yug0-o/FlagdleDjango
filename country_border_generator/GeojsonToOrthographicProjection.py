@@ -6,7 +6,7 @@ import os
 import sys
 sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
 
-import Base64EncoderDecoder as utf8_To_b64
+import Base32EncoderDecoder as utf8_To_b64
 
 country_folder = "Flagdle/assets/country"
 continents = os.listdir(country_folder)
@@ -78,7 +78,7 @@ def filter_country_gdf(local_gdf, country_name:str, DEBUG_FULL, DEBUG_INFO, lagu
                 continue
 
             country_name, extension = os.path.splitext(country)
-            country = utf8_To_b64.base64_to_utf8(country_name) + '.' + extension
+            country = utf8_To_b64.base32_to_utf8(country_name) + '.' + extension
             
             # add each country's gdf to the continent_gdf
             country_gdf, country_full_name = filter_country_gdf(world_gdf, country.split('.')[0], DEBUG_FULL, DEBUG_INFO, laguage=laguage)
