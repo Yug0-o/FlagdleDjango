@@ -8,9 +8,9 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, TemplateView, FormView
 
-from .forms import GuessForm
-from .forms import SignUpForm
+from .forms import GuessForm, SignUpForm
 from .models import BestScore, CurrentScore
+from .Base64EncoderDecoder import base64_to_utf8
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
@@ -55,7 +55,12 @@ class ImagesView(TemplateView):
         context = super().get_context_data(**kwargs)
         categories_image = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories_image[0])
-        context['images'] = get_from_directory("country", selected_category)
+        images = get_from_directory("country", selected_category)
+
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        context['images'] = transformed_images
         context['categories'] = categories_image
         context['selected_category'] = selected_category
         return context
@@ -68,7 +73,12 @@ class FlagView(TemplateView):
         context = super().get_context_data(**kwargs)
         categories_image = ['World', 'Pride']
         selected_category = self.request.GET.get('category', categories_image[0])
-        context['images'] = get_from_directory("flags", selected_category)
+        images = get_from_directory("flags", selected_category)
+
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        context['images'] = transformed_images
         context['categories'] = categories_image
         context['selected_category'] = selected_category
         return context
@@ -86,13 +96,16 @@ class CountryGameView(LoginRequiredMixin, FormView):
         selected_category = self.request.GET.get('category', categories[0])
         images = get_from_directory("country", selected_category)
 
-        if not images:
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        if not transformed_images:
             context['message'] = 'No images found in this category.'
         else:
             context['categories'] = categories
             context['selected_category'] = selected_category
-            context['images'] = images
-            random_image = random.choice(images)
+            context['images'] = transformed_images
+            random_image = random.choice(transformed_images)
             context['current_image'] = random_image[0]
             context['correct_answer'] = random_image[1]
 
@@ -141,7 +154,11 @@ class CountryGameView(LoginRequiredMixin, FormView):
             best_score.save()
 
         images = get_from_directory("country", selected_category)
-        random_image = random.choice(images)
+
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        random_image = random.choice(transformed_images)
 
         return self.render_to_response(self.get_context_data(
             form=form,
@@ -165,13 +182,16 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         selected_category = self.request.GET.get('flag_category', flag_categories[0])
         images = get_from_directory("flags", selected_category)
 
-        if not images:
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        if not transformed_images:
             context['message'] = 'No images found in this category.'
         else:
             context['flag_categories'] = flag_categories
             context['selected_category'] = selected_category
-            context['images'] = images
-            random_image = random.choice(images)
+            context['images'] = transformed_images
+            random_image = random.choice(transformed_images)
             context['current_image'] = random_image[0]
             context['correct_answer'] = random_image[1]
 
@@ -220,7 +240,11 @@ class FlagsGameView(LoginRequiredMixin, FormView):
             best_score.save()
 
         images = get_from_directory("flags", selected_category)
-        random_image = random.choice(images)
+
+        # Transform filenames
+        transformed_images = [(image, base64_to_utf8(filename)) for image, filename in images]
+
+        random_image = random.choice(transformed_images)
 
         return self.render_to_response(self.get_context_data(
             form=form,
