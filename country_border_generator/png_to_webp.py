@@ -63,6 +63,6 @@ def convert_folders_png_to_webp(input_path:str, BASE32decoding=0, BASE32encoding
 
 if __name__ == '__main__':
     root_folder = "D:/VisualCode_Python/FlagdleDjango/Flagdle/assets/flags/World"
-    BASE32decoding, BASE32encoding = 1, 0
+    BASE32decoding, BASE32encoding = 0, 1
     print(f"Converting all PNG images in {root_folder} to WEBP.")
     convert_folders_png_to_webp(root_folder, BASE32decoding, BASE32encoding)
