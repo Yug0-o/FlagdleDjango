@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 import sys
-sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
+sys.path.append('Flagdle\\game')
 
 import Base32EncoderDecoder as utf8_To_b64
 

@@ -9,7 +9,7 @@ def utf8_to_base32(utf8_text: str) -> str:
 
 def base32_to_utf8(base32_text: str) -> str:
     """
-    Converts a base32 text to a UTF-8 text.
+    Converts a base32 text to a UTF-8 text.\n
     If the decoding fails, return the input text
     """
     try:

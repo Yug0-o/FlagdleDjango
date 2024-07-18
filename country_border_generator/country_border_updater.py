@@ -5,7 +5,7 @@ import threading
 import os
 
 import sys
-sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
+sys.path.append('Flagdle\\game')
 
 import GeojsonToOrthographicProjection as gtop
 import png_to_webp as ptw

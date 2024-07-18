@@ -1,9 +1,8 @@
-from fileinput import filename
 import os
 from PIL import Image
 
 import sys
-sys.path.append('D:\\VisualCode_Python\\FlagdleDjango\\Flagdle\\game')
+sys.path.append('Flagdle\game')
 from Base32EncoderDecoder import utf8_to_base32, base32_to_utf8
 
 def convert_png_to_webp(img_path:str,BASE32decoding=0, BASE32encoding=0):
@@ -21,34 +20,32 @@ def convert_png_to_webp(img_path:str,BASE32decoding=0, BASE32encoding=0):
     
     image = Image.open(img_path)
 
+    path, filename = os.path.split(img_path)
+    filename = filename.rsplit('.', 1)[0]
+
     if BASE32decoding:
-        path, filename = os.path.split(img_path)
-        filename = filename.rsplit('.', 1)[0]
-        filename = base32_to_utf8(filename)
-        output_path = os.path.join(path, filename + '.webp')
+        filename_utf8 = base32_to_utf8(filename)
+        output_path = os.path.join(path, filename_utf8 + '.webp')
     else:
         output_path = img_path.rsplit('.', 1)[0] + '.webp'
     
     image.save(output_path, 'WEBP')
-
     
-    path, filename = os.path.split(img_path)
-    if "icon" not in filename:
-        if BASE32encoding:
-            filename = filename.rsplit('.', 1)[0]
-            base32_filename = utf8_to_base32(filename)
-            base32_path = os.path.join(path, base32_filename + '.webp')
-            if os.path.isfile(base32_path):
-                os.remove(base32_path)
-                
-            os.rename(output_path, base32_path)
+    if BASE32encoding:
+        filename_base32 = utf8_to_base32(filename)
+        base32_path = os.path.join(path, filename_base32 + '.webp')
+        
+        if os.path.isfile(base32_path):
+            os.remove(base32_path)
+            
+        os.rename(output_path, base32_path)
 
     try:
         os.remove(img_path)
         if BASE32decoding and not BASE32encoding:
             filename = filename.rsplit('.', 1)[0]
-            base32_filename = utf8_to_base32(filename)
-            base32_path = os.path.join(path, base32_filename + '.webp')
+            filename_base32 = utf8_to_base32(filename)
+            base32_path = os.path.join(path, filename_base32 + '.webp')
             if os.path.isfile(base32_path):
                 os.remove(base32_path)
     except:
@@ -71,7 +68,7 @@ def convert_folders_png_to_webp(input_path:str, BASE32decoding=0, BASE32encoding
 
 
 if __name__ == '__main__':
-    root_folder = "D:/VisualCode_Python/FlagdleDjango/Flagdle/assets/flags/World"
+    root_folder = "Flagdle/assets/flags/Pride"
     BASE32decoding, BASE32encoding = 0, 1
     print(f"Converting all PNG images in {root_folder} to WEBP.")
     convert_folders_png_to_webp(root_folder, BASE32decoding, BASE32encoding)
