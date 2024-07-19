@@ -34,6 +34,13 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['categories'] = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         context['flag_categories'] = ['World', 'Pride']
+        self.request.session['guesses'] = []
+        #reset the shown images in the session
+        for category in context['categories']:
+            self.request.session[f'shown_images_{category}'] = []
+        for category in context['flag_categories']:
+            self.request.session[f'shown_images_{category}'] = []
+        
         return context
 
 
@@ -113,7 +120,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
                 context['message'] = 'Congratulations! You have guessed all the images in this category.'
                 context['all_guessed'] = True
                 self.request.session[f'shown_images_{selected_category}'] = []
-            else:
+            else:    
                 context['images'] = remaining_images
                 random_image = random.choice(remaining_images)
                 context['current_image'] = random_image[0]
@@ -125,63 +132,83 @@ class CountryGameView(LoginRequiredMixin, FormView):
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
+        #if the remaining_images is the same number as the max score, recet the current score
+        if len(remaining_images) == len(transformed_images):
+            setattr(current_score, f"{score_field_prefix}_current_score", 0)
+            current_score.save()
+        
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
-
-        print("\n--\nCurrent score: ", context['current_score']) #debug
-        print("Best score: ", context['best_score'], "\n--")#debug
-
-
         return context
+
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
         print(f"User guess: {user_guess}")#debug
+
+        guesses = self.request.session.get('guesses', [])
+        if not guesses:
+            self.request.session['guesses'] = []
+            guesses = []
+
+        print(f"Guesses: {guesses}")#debug
+            
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
         print(f"Correct answer: {correct_answer_without_extension}")#debug
-        
+
+        message=""  
         score_increment = 0
-        if user_guess == correct_answer_without_extension:
-            message = "Correct!"
-            score_increment = 1
-        else:
-            message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
-            score_increment = 0
+        if user_guess not in guesses:
+            if user_guess == correct_answer_without_extension:
+                message = "Correct!"
+                guesses.append(user_guess)
+                self.request.session['guesses'] = guesses
+                score_increment = 1
+            else:
+                if user_guess not in guesses: message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
+                score_increment = 0
 
         # Update the user's score
         username = self.request.user
-        print(f"Username: {username}")#debug
+        print(f"------\nUsername: {username}")#debug
+
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+
         selected_category = self.request.GET.get('category', categories[0])
         print(f"Selected category: {selected_category}")#debug
+
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-        print(f"best score created: {best_created}")#debug
+        print(f"\nbest score created: {best_created}")#debug
+
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         print(f"current score created: {current_created}")#debug
+
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
-        current_score_val = getattr(current_score, current_score_field, 0)
-        print(f"Current score: {current_score_val}")#debug
-        new_current_score = current_score_val + score_increment
-        print(f"New current score: {new_current_score}")#debug
-        setattr(current_score, current_score_field, new_current_score)
+        max_score = len(get_from_directory("country", selected_category))
+
+        current_score_val = getattr(current_score, current_score_field, 0)/100 * max_score
+        
+        new_current_score = round(current_score_val + score_increment)
+        new_current_score_percentage = round(new_current_score/max_score *100)
+        print(f"Current score: {new_current_score}/{max_score} | {new_current_score_percentage}%")#debug
+        
+        setattr(current_score, current_score_field, new_current_score_percentage)
         current_score.save()
 
-
         #check if the new score has been saved
-        current_score_val = getattr(current_score, current_score_field, 0)
-        print(f"Current score after save: {current_score_val}")#debug
+        print(f"Current score after save: {getattr(current_score, current_score_field, 0)}")#debug
 
 
-        best_score_val = getattr(best_score, best_score_field, 0)
-        print(f"Best score: {best_score_val}")#debug
-        if new_current_score > best_score_val:
-            setattr(best_score, best_score_field, new_current_score)
+        best_score_percentage = getattr(best_score, best_score_field, 0)
+        print(f"Best score: {best_score_percentage}%")#debug
+        if new_current_score_percentage > best_score_percentage:
+            setattr(best_score, best_score_field, new_current_score_percentage)
             best_score.save()
 
         images = get_from_directory("country", selected_category)
@@ -196,7 +223,12 @@ class CountryGameView(LoginRequiredMixin, FormView):
 
         remaining_images = [img for img in transformed_images if img[0] not in shown_images]
 
+        print(f"\nRemaining images:")#debug
+        for img in remaining_images:
+            print("\t",img[1])
+
         if not remaining_images:
+            self.request.session['guesses'] = []
             message = 'Congratulations! You have guessed all the images in this category.'
             self.request.session[f'shown_images_{selected_category}'] = []
             context = self.get_context_data(
@@ -206,7 +238,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
                 message=message,
                 all_guessed=True
             )
-        else:
+        else:   
             random_image = random.choice(remaining_images)
             context = self.get_context_data(
                 form=form,
@@ -221,9 +253,8 @@ class CountryGameView(LoginRequiredMixin, FormView):
         #print values before returning
         print(f"\n\nUsername: {username}")#debug
         print(f"score increment: {score_increment}")#debug
-        print(f"current score: {getattr(current_score, current_score_field, 0)}")#debug
-        print(f"best score: {best_score_val}")#debug
-
+        print(f"current score: {getattr(current_score, current_score_field, 0)}%")#debug
+        print(f"best score: {getattr(best_score, best_score_field, 0)}%\n------")#debug
 
         return self.render_to_response(context)
 
@@ -269,59 +300,82 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
+        if len(remaining_images) == len(transformed_images):
+            setattr(current_score, f"{score_field_prefix}_current_score", 0)
+            current_score.save()
+        
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
-
-        print("\n--\nCurrent score: ", context['current_score'])#debug
-        print("Best score: ", context['best_score'], "\n--")#debug
-        
         return context
+
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
         print(f"User guess: {user_guess}")#debug
+
+        guesses = self.request.session.get('guesses', [])
+        if not guesses:
+            self.request.session['guesses'] = []
+            guesses = []
+
+        print(f"Guesses: {guesses}")#debug
+            
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
         print(f"Correct answer: {correct_answer_without_extension}")#debug
 
-        if user_guess == correct_answer_without_extension:
-            message = "Correct!"
-            score_increment = 1
-        else:
-            message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
-            score_increment = 0
+        message=""  
+        score_increment = 0
+        if user_guess not in guesses:
+            if user_guess == correct_answer_without_extension:
+                message = "Correct!"
+                guesses.append(user_guess)
+                self.request.session['guesses'] = guesses
+                score_increment = 1
+            else:
+                if user_guess not in guesses: message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
+                score_increment = 0
 
         # Update the user's score
         username = self.request.user
-        print(f"Username: {username}")#debug
-        flag_categories = ['World', 'Pride']
-        selected_category = self.request.GET.get('flag_category', flag_categories[0])
+        print(f"------\nUsername: {username}")#debug
+
+        categories = ['World', 'Pride']
+    
+        selected_category = self.request.GET.get('category', categories[0])
         print(f"Selected category: {selected_category}")#debug
+
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-        print(f"best score created: {best_created}")#debug
+        print(f"\nbest score created: {best_created}")#debug
+
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         print(f"current score created: {current_created}")#debug
+
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
-        current_score_val = getattr(current_score, current_score_field, 0)
-        print(f"Current score: {current_score_val}")#debug
-        new_current_score = current_score_val + score_increment
-        print(f"New current score: {new_current_score}")#debug
-        setattr(current_score, current_score_field, new_current_score)
+        max_score = len(get_from_directory("flags", selected_category))
+
+        current_score_val = getattr(current_score, current_score_field, 0)/100 * max_score
+        
+        new_current_score = round(current_score_val + score_increment)
+        new_current_score_percentage = round(new_current_score/max_score *100)
+        print(f"Current score: {new_current_score}/{max_score} | {new_current_score_percentage}%")#debug
+        
+        setattr(current_score, current_score_field, new_current_score_percentage)
         current_score.save()
 
         #check if the new score has been saved
-        current_score_val = getattr(current_score, current_score_field, 0)
-        print(f"Current score after save: {current_score_val}")#debug
+        print(f"Current score after save: {getattr(current_score, current_score_field, 0)}")#debug
 
-        best_score_val = getattr(best_score, best_score_field, 0)
-        print(f"Best score: {best_score_val}")#debug
-        if new_current_score > best_score_val:
-            setattr(best_score, best_score_field, new_current_score)
+
+        best_score_percentage = getattr(best_score, best_score_field, 0)
+        print(f"Best score: {best_score_percentage}%")#debug
+        if new_current_score_percentage > best_score_percentage:
+            setattr(best_score, best_score_field, new_current_score_percentage)
             best_score.save()
 
         images = get_from_directory("flags", selected_category)
@@ -336,12 +390,17 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         remaining_images = [img for img in transformed_images if img[0] not in shown_images]
 
+        print(f"\nRemaining images:")#debug
+        for img in remaining_images:
+            print("\t",img[1])
+
         if not remaining_images:
+            self.request.session['guesses'] = []
             message = 'Congratulations! You have guessed all the images in this category.'
             self.request.session[f'shown_images_{selected_category}'] = []
             context = self.get_context_data(
                 form=form,
-                flag_categories=flag_categories,
+                categories=categories,
                 selected_category=selected_category,
                 message=message,
                 all_guessed=True
@@ -350,7 +409,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
             random_image = random.choice(remaining_images)
             context = self.get_context_data(
                 form=form,
-                flag_categories=flag_categories,
+                categories=categories,
                 selected_category=selected_category,
                 current_image=random_image[0],
                 correct_answer=random_image[1],
@@ -361,10 +420,10 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         #print values before returning
         print(f"\n\nUsername: {username}")#debug
         print(f"score increment: {score_increment}")#debug
-        print(f"current score: {getattr(current_score, current_score_field, 0)}")#debug
-        print(f"best score: {best_score_val}")#debug
-        
-    
+        print(f"current score: {getattr(current_score, current_score_field, 0)}%")#debug
+        print(f"best score: {getattr(best_score, best_score_field, 0)}%\n------")#debug
+
+
         return self.render_to_response(context)
 
 
