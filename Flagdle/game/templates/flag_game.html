@@ -86,7 +86,7 @@
             </button>
         </div>
     </header>
-        <div class="game">
+    <div class="game">
         <p>Current score in {{ selected_category }}: {{ current_score }}</p>
         <p>Best score in {{ selected_category }}: {{ best_score }}</p>
         <form method="get" action="" class="game_control">
@@ -113,18 +113,26 @@
             </script>
         {% endif %}
 
-        <div class="image-game">
-            <img src="{% static current_image %}" alt="Guess the title" onContextMenu="return false;">
-        </div>
+        {% if all_guessed %}
+            <div class="victory-message">
+                <p>Congratulations! You have guessed all the images in this category.</p>
+                <button onclick="window.location.href='{% url 'flag_game' %}?flag_category={{ selected_category }}'">Continue Playing</button>
+                <button onclick="window.location.href='/Flagdle/'">Go to Homepage</button>
+            </div>
+        {% else %}
+            <div class="image-game">
+                <img src="{% static current_image %}" alt="Guess the title" onContextMenu="return false;">
+            </div>
 
-        <form method="post" action="" class="game_control">
-            {% csrf_token %}
-            <input type="hidden" name="current_image" value="{{ current_image }}">
-            <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-            <label for="guess">Your Guess:</label>
-            <input type="text" name="guess" id="guess" required>
-            <button type="submit">Submit</button>
-        </form>
+            <form method="post" action="" class="game_control">
+                {% csrf_token %}
+                <input type="hidden" name="current_image" value="{{ current_image }}">
+                <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+                <label for="guess">Your Guess:</label>
+                <input type="text" name="guess" id="guess" required>
+                <button type="submit">Submit</button>
+            </form>
+        {% endif %}
     </div>
 </body>
 </html>

@@ -220,10 +220,20 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         else:
             context['flag_categories'] = flag_categories
             context['selected_category'] = selected_category
-            context['images'] = transformed_images
-            random_image = random.choice(transformed_images)
-            context['current_image'] = random_image[0]
-            context['correct_answer'] = random_image[1]
+
+            # Get already shown images from the session
+            shown_images = self.request.session.get(f'shown_images_{selected_category}', [])
+            remaining_images = [img for img in transformed_images if img[0] not in shown_images]
+
+            if not remaining_images:
+                context['message'] = 'Congratulations! You have guessed all the images in this category.'
+                context['all_guessed'] = True
+                self.request.session[f'shown_images_{selected_category}'] = []
+            else:
+                context['images'] = remaining_images
+                random_image = random.choice(remaining_images)
+                context['current_image'] = random_image[0]
+                context['correct_answer'] = random_image[1]
 
         # Add the scores to the context
         username = self.request.user
@@ -274,16 +284,36 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         # Transform filenames
         transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
 
-        random_image = random.choice(transformed_images)
+        # Update shown images in the session
+        shown_images = self.request.session.get(f'shown_images_{selected_category}', [])
+        shown_images.append(form.cleaned_data['current_image'])
+        self.request.session[f'shown_images_{selected_category}'] = shown_images
 
-        return self.render_to_response(self.get_context_data(
-            form=form,
-            flag_categories=flag_categories,
-            selected_category=selected_category,
-            current_image=random_image[0],
-            correct_answer=random_image[1],
-            message=message
-        ))
+        remaining_images = [img for img in transformed_images if img[0] not in shown_images]
+
+        if not remaining_images:
+            message = 'Congratulations! You have guessed all the images in this category.'
+            self.request.session[f'shown_images_{selected_category}'] = []
+            context = self.get_context_data(
+                form=form,
+                flag_categories=flag_categories,
+                selected_category=selected_category,
+                message=message,
+                all_guessed=True
+            )
+        else:
+            random_image = random.choice(remaining_images)
+            context = self.get_context_data(
+                form=form,
+                flag_categories=flag_categories,
+                selected_category=selected_category,
+                current_image=random_image[0],
+                correct_answer=random_image[1],
+                message=message,
+                all_guessed=False
+            )
+
+        return self.render_to_response(context)
 
 
 # file deepcode ignore DisablesCSRFProtection: <not a security issue>
