@@ -128,13 +128,21 @@ class CountryGameView(LoginRequiredMixin, FormView):
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
 
+        print("\n--\nCurrent score: ", context['current_score']) #debug
+        print("Best score: ", context['best_score'], "\n--")#debug
+
+
         return context
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
+        print(f"User guess: {user_guess}")#debug
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
+        print(f"Correct answer: {correct_answer_without_extension}")#debug
+        
+        score_increment = 0
         if user_guess == correct_answer_without_extension:
             message = "Correct!"
             score_increment = 1
@@ -144,21 +152,34 @@ class CountryGameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
+        print(f"Username: {username}")#debug
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
         selected_category = self.request.GET.get('category', categories[0])
+        print(f"Selected category: {selected_category}")#debug
         best_score, best_created = BestScore.objects.get_or_create(username=username)
+        print(f"best score created: {best_created}")#debug
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
+        print(f"current score created: {current_created}")#debug
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
         current_score_val = getattr(current_score, current_score_field, 0)
+        print(f"Current score: {current_score_val}")#debug
         new_current_score = current_score_val + score_increment
+        print(f"New current score: {new_current_score}")#debug
         setattr(current_score, current_score_field, new_current_score)
         current_score.save()
 
+
+        #check if the new score has been saved
+        current_score_val = getattr(current_score, current_score_field, 0)
+        print(f"Current score after save: {current_score_val}")#debug
+
+
         best_score_val = getattr(best_score, best_score_field, 0)
+        print(f"Best score: {best_score_val}")#debug
         if new_current_score > best_score_val:
             setattr(best_score, best_score_field, new_current_score)
             best_score.save()
@@ -196,6 +217,13 @@ class CountryGameView(LoginRequiredMixin, FormView):
                 message=message,
                 all_guessed=False
             )
+
+        #print values before returning
+        print(f"\n\nUsername: {username}")#debug
+        print(f"score increment: {score_increment}")#debug
+        print(f"current score: {getattr(current_score, current_score_field, 0)}")#debug
+        print(f"best score: {best_score_val}")#debug
+
 
         return self.render_to_response(context)
 
@@ -244,12 +272,18 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
 
+        print("\n--\nCurrent score: ", context['current_score'])#debug
+        print("Best score: ", context['best_score'], "\n--")#debug
+        
         return context
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
+        print(f"User guess: {user_guess}")#debug
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
+
+        print(f"Correct answer: {correct_answer_without_extension}")#debug
 
         if user_guess == correct_answer_without_extension:
             message = "Correct!"
@@ -260,21 +294,32 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
+        print(f"Username: {username}")#debug
         flag_categories = ['World', 'Pride']
         selected_category = self.request.GET.get('flag_category', flag_categories[0])
+        print(f"Selected category: {selected_category}")#debug
         best_score, best_created = BestScore.objects.get_or_create(username=username)
+        print(f"best score created: {best_created}")#debug
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
+        print(f"current score created: {current_created}")#debug
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
         current_score_val = getattr(current_score, current_score_field, 0)
+        print(f"Current score: {current_score_val}")#debug
         new_current_score = current_score_val + score_increment
+        print(f"New current score: {new_current_score}")#debug
         setattr(current_score, current_score_field, new_current_score)
         current_score.save()
 
+        #check if the new score has been saved
+        current_score_val = getattr(current_score, current_score_field, 0)
+        print(f"Current score after save: {current_score_val}")#debug
+
         best_score_val = getattr(best_score, best_score_field, 0)
+        print(f"Best score: {best_score_val}")#debug
         if new_current_score > best_score_val:
             setattr(best_score, best_score_field, new_current_score)
             best_score.save()
@@ -313,6 +358,13 @@ class FlagsGameView(LoginRequiredMixin, FormView):
                 all_guessed=False
             )
 
+        #print values before returning
+        print(f"\n\nUsername: {username}")#debug
+        print(f"score increment: {score_increment}")#debug
+        print(f"current score: {getattr(current_score, current_score_field, 0)}")#debug
+        print(f"best score: {best_score_val}")#debug
+        
+    
         return self.render_to_response(context)
 
 
