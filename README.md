@@ -7,7 +7,7 @@ A game about Geography
 - [X] Add a button to change the theme.
 - [ ] Prevent the page from reloading with each guess.
 - [X] Make the images larger.
-- [ ] Ensure a country does not repeat.
+- [X] Ensure a country does not repeat.
 - [X] Obfuscate the names of the country images to prevent cheating.
 - [ ] Title with changing game name (Welcome to Flagdle, Welcome to Countrydle, ...).
 - [x] Add a leaderboard.

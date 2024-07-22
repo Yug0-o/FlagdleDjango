@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 class UserPermissions(BasePermission):
     def has_permission(self, request, view):
         if request.method in ('GET', 'PUT', 'PATCH', 'OPTIONS', 'HEAD'):
-        # Only gives access to users while restricting them
+            # Only gives access to users while restricting them
             return True
         return request.user
 
