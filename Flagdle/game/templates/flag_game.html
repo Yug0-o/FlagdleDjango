@@ -90,10 +90,10 @@
         <p>Current score in {{ selected_category }}: {{ current_score }}%</p>
         <p>Best score in {{ selected_category }}: {{ best_score }}%</p>
         <form method="get" action="" class="game_control">
-            <label for="flag_category">Choose a category:</label>
-            <select name="flag_category" id="flag_category" onchange="this.form.submit()">
-                {% for flag_category in flag_categories %}
-                    <option value="{{ flag_category }}" {% if flag_category == selected_category %}selected{% endif %}>{{ flag_category }}</option>
+            <label for="category">Choose a category:</label>
+            <select name="category" id="category" onchange="this.form.submit()">
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
                 {% endfor %}
             </select>
         </form>
@@ -116,7 +116,7 @@
         {% if all_guessed %}
             <div class="victory-message">
                 <p>Congratulations! You have guessed all the images in this category.</p>
-                <button onclick="window.location.href='{% url 'flag_game' %}?flag_category={{ selected_category }}'">Continue Playing</button>
+                <button onclick="window.location.href='{% url 'flag_game' %}?category={{ selected_category }}'">Continue Playing</button>
                 <button onclick="window.location.href='/Flagdle/'">Go to Homepage</button>
             </div>
         {% else %}

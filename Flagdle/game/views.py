@@ -266,8 +266,8 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        flag_categories = ['World', 'Pride']
-        selected_category = self.request.GET.get('flag_category', flag_categories[0])
+        categories = ['World', 'Pride']
+        selected_category = self.request.GET.get('category', categories[0])
         images = get_from_directory("flags", selected_category)
 
         # Transform filenames
@@ -276,7 +276,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         if not transformed_images:
             context['message'] = 'No images found in this category.'
         else:
-            context['flag_categories'] = flag_categories
+            context['categories'] = categories
             context['selected_category'] = selected_category
 
             # Get already shown images from the session
@@ -299,10 +299,11 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
+        # if the remaining_images is the same number as the max score, reset the current score
         if len(remaining_images) == len(transformed_images):
             setattr(current_score, f"{score_field_prefix}_current_score", 0)
             current_score.save()
-        
+
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
         return context
@@ -341,7 +342,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         print(f"------\nUsername: {username}")  # debug
 
         categories = ['World', 'Pride']
-    
+
         selected_category = self.request.GET.get('category', categories[0])
         print(f"Selected category: {selected_category}")  # debug
 
@@ -358,12 +359,12 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         max_score = len(get_from_directory("flags", selected_category))
 
-        current_score_val = getattr(current_score, current_score_field, 0)/100 * max_score
-        
+        current_score_val = getattr(current_score, current_score_field, 0) / 100 * max_score
+
         new_current_score = round(current_score_val + score_increment)
-        new_current_score_percentage = round(new_current_score/max_score * 100)
+        new_current_score_percentage = round(new_current_score / max_score * 100)
         print(f"Current score: {new_current_score}/{max_score} | {new_current_score_percentage}%")  # debug
-        
+
         setattr(current_score, current_score_field, new_current_score_percentage)
         current_score.save()
 

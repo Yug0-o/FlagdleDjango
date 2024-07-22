@@ -49,12 +49,12 @@
             <!-- <div class="vertical_delimiter"></div> -->
             <div class="game_grid" id="game_grid">
                 <h2>FLAGDLE</h2>
-                    {% for flag_category in flag_categories %}
+                    {% for category in flag_categories %}
                         <form class="game_button" action="{% url 'flag_game' %}" method="get">
-                            <input type="hidden" name="flag_category" value="{{ flag_category }}">
+                            <input type="hidden" name="category" value="{{ category }}">
                             <button type="submit">
-                                <img src="/static/flags/{{flag_category}}/icon.webp" alt="{{ flag_category }}">
-                                <span>{{ flag_category }}</span>
+                                <img src="/static/flags/{{category}}/icon.webp" alt="{{ category }}">
+                                <span>{{ category }}</span>
                             </button>
                         </form>
                     {% endfor %}
