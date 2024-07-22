@@ -180,7 +180,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
         print(f"Selected category: {selected_category}")  # debug
 
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-        print(f"\nbest score created: {best_created}")  # ebug
+        print(f"\nbest score created: {best_created}")  # debug
 
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         print(f"current score created: {current_created}")  # debug
@@ -317,7 +317,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
             guesses = []
 
         print(f"Guesses: {guesses}")  # debug
-            
+
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
@@ -464,7 +464,8 @@ class LeaderboardView(TemplateView):
                 user_scores = {
                     'username': score.username,
                     'total_best_score': 0,
-                    'scores': {}
+                    'scores': {},
+                    'categories_count': 0
                 }
 
                 for category in categories:
@@ -472,13 +473,21 @@ class LeaderboardView(TemplateView):
                     best_score = getattr(score, best_score_field, 0)
                     user_scores['scores'][category] = best_score
                     user_scores['total_best_score'] += best_score
+                    user_scores['categories_count'] += 1
+
+                if user_scores['categories_count'] > 0:
+                    user_scores['average_best_score'] = round(user_scores['total_best_score'] / user_scores['categories_count'])
+                    print(user_scores)
+                else:
+                    user_scores['average_best_score'] = 0  # Handle case where user has no scores
 
                 leaderboard.append(user_scores)
 
-        # Tri des utilisateurs par le score total décroissant
-        leaderboard = sorted(leaderboard, key=lambda x: x['total_best_score'], reverse=True)
+        # Sort users by the average score in descending order
+        leaderboard = sorted(leaderboard, key=lambda x: x['average_best_score'], reverse=True)
 
         context['leaderboard'] = leaderboard
         context['categories'] = categories
 
         return context
+

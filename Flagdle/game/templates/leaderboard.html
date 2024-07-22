@@ -104,9 +104,9 @@
                     <tr>
                         <td>{{ user.username }}</td>
                         {% for category in categories %}
-                            <td>{{ user.scores|get_item:category }}</td>
+                            <td>{{ user.scores|get_item:category }}%</td>
                         {% endfor %}
-                        <td>{{ user.total_best_score }}</td>
+                        <td>{{ user.average_best_score }}%</td>
                     </tr>
                 {% endfor %}
             </tbody>
