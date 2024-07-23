@@ -36,7 +36,7 @@ window.addEventListener('scroll', function () {
 
 // Function to reset the score, only called if it's not country_game.html or flag_game.html
 function resetScore() {
-    if (!window.location.pathname.includes('country_game', 'flag_game')) {
+    if (window.location.pathname.includes('homepage')) {
         $.ajax({
             type: 'POST',
             url: "/reset_current_score",

@@ -132,6 +132,7 @@ class CountryGameView(LoginRequiredMixin, FormView):
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
+
         # if the remaining_images is the same number as the max score, reset the current score
         if len(remaining_images) == len(transformed_images):
             setattr(current_score, f"{score_field_prefix}_current_score", 0)
@@ -143,19 +144,14 @@ class CountryGameView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
-        print(f"User guess: {user_guess}")  # debug
 
         guesses = self.request.session.get('guesses', [])
         if not guesses:
             self.request.session['guesses'] = []
             guesses = []
 
-        print(f"Guesses: {guesses}")  # debug
-            
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
-
-        print(f"Correct answer: {correct_answer_without_extension}")  # debug
 
         message = ""
         score_increment = 0
@@ -172,18 +168,14 @@ class CountryGameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
-        print(f"------\nUsername: {username}")  # debug
 
         categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
 
         selected_category = self.request.GET.get('category', categories[0])
-        print(f"Selected category: {selected_category}")  # debug
 
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-        print(f"\nbest score created: {best_created}")  # debug
 
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-        print(f"current score created: {current_created}")  # debug
 
         score_field_prefix = selected_category.lower().replace('-', '_')
 
@@ -193,19 +185,14 @@ class CountryGameView(LoginRequiredMixin, FormView):
         max_score = len(get_from_directory("country", selected_category))
 
         current_score_val = getattr(current_score, current_score_field, 0)/100 * max_score
-        
+
         new_current_score = round(current_score_val + score_increment)
         new_current_score_percentage = round(new_current_score/max_score * 100)
-        print(f"Current score: {new_current_score}/{max_score} | {new_current_score_percentage}%")  # debug
-        
+
         setattr(current_score, current_score_field, new_current_score_percentage)
         current_score.save()
 
-        # check if the new score has been saved
-        print(f"Current score after save: {getattr(current_score, current_score_field, 0)}")  # debug
-
         best_score_percentage = getattr(best_score, best_score_field, 0)
-        print(f"Best score: {best_score_percentage}%")  # debug
         if new_current_score_percentage > best_score_percentage:
             setattr(best_score, best_score_field, new_current_score_percentage)
             best_score.save()
@@ -221,10 +208,6 @@ class CountryGameView(LoginRequiredMixin, FormView):
         self.request.session[f'shown_images_{selected_category}'] = shown_images
 
         remaining_images = [img for img in transformed_images if img[0] not in shown_images]
-
-        print(f"\nRemaining images:")  # debug
-        for img in remaining_images:
-            print("\t", img[1])
 
         if not remaining_images:
             self.request.session['guesses'] = []
@@ -249,12 +232,6 @@ class CountryGameView(LoginRequiredMixin, FormView):
                 all_guessed=False
             )
 
-        # print values before returning
-        print(f"\n\nUsername: {username}")  # debug
-        print(f"score increment: {score_increment}")  # debug
-        print(f"current score: {getattr(current_score, current_score_field, 0)}%")  # debug
-        print(f"best score: {getattr(best_score, best_score_field, 0)}%\n------")  # debug
-
         return self.render_to_response(context)
 
 
@@ -266,7 +243,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['World', 'Pride']
+        categories = ['Pride', 'World']
         selected_category = self.request.GET.get('category', categories[0])
         images = get_from_directory("flags", selected_category)
 
@@ -299,6 +276,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         best_score, best_created = BestScore.objects.get_or_create(username=username)
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
+
         # if the remaining_images is the same number as the max score, reset the current score
         if len(remaining_images) == len(transformed_images):
             setattr(current_score, f"{score_field_prefix}_current_score", 0)
@@ -310,28 +288,23 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
-        print(f"User guess: {user_guess}")  # debug
 
         guesses = self.request.session.get('guesses', [])
         if not guesses:
             self.request.session['guesses'] = []
             guesses = []
 
-        print(f"Guesses: {guesses}")  # debug
-
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
-
-        print(f"Correct answer: {correct_answer_without_extension}")  # debug
 
         message = ""
         score_increment = 0
         if user_guess not in guesses:
             if user_guess == correct_answer_without_extension:
+                score_increment = 1
                 message = "Correct!"
                 guesses.append(user_guess)
                 self.request.session['guesses'] = guesses
-                score_increment = 1
             else:
                 if user_guess not in guesses:
                     message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
@@ -339,18 +312,14 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         # Update the user's score
         username = self.request.user
-        print(f"------\nUsername: {username}")  # debug
 
-        categories = ['World', 'Pride']
+        categories = ['Pride', 'World']
 
         selected_category = self.request.GET.get('category', categories[0])
-        print(f"Selected category: {selected_category}")  # debug
 
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-        print(f"\nbest score created: {best_created}")  # debug
 
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-        print(f"current score created: {current_created}")  # debug
 
         score_field_prefix = selected_category.lower().replace('-', '_')
 
@@ -359,20 +328,15 @@ class FlagsGameView(LoginRequiredMixin, FormView):
 
         max_score = len(get_from_directory("flags", selected_category))
 
-        current_score_val = getattr(current_score, current_score_field, 0) / 100 * max_score
+        current_score_val = getattr(current_score, current_score_field, 0) / 100 * max_score  # return 0.0, not normal
 
         new_current_score = round(current_score_val + score_increment)
         new_current_score_percentage = round(new_current_score / max_score * 100)
-        print(f"Current score: {new_current_score}/{max_score} | {new_current_score_percentage}%")  # debug
 
         setattr(current_score, current_score_field, new_current_score_percentage)
         current_score.save()
 
-        # check if the new score has been saved
-        print(f"Current score after save: {getattr(current_score, current_score_field, 0)}")  # debug
-
         best_score_percentage = getattr(best_score, best_score_field, 0)
-        print(f"Best score: {best_score_percentage}%")  # debug
         if new_current_score_percentage > best_score_percentage:
             setattr(best_score, best_score_field, new_current_score_percentage)
             best_score.save()
@@ -388,10 +352,6 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         self.request.session[f'shown_images_{selected_category}'] = shown_images
 
         remaining_images = [img for img in transformed_images if img[0] not in shown_images]
-
-        print(f"\nRemaining images:")  # debug
-        for img in remaining_images:
-            print("\t", img[1])
 
         if not remaining_images:
             self.request.session['guesses'] = []
@@ -415,12 +375,6 @@ class FlagsGameView(LoginRequiredMixin, FormView):
                 message=message,
                 all_guessed=False
             )
-
-        # print values before returning
-        print(f"\n\nUsername: {username}")  # debug
-        print(f"score increment: {score_increment}")  # debug
-        print(f"current score: {getattr(current_score, current_score_field, 0)}%")  # debug
-        print(f"best score: {getattr(best_score, best_score_field, 0)}%\n------")  # debug
 
         return self.render_to_response(context)
 
@@ -478,7 +432,6 @@ class LeaderboardView(TemplateView):
 
                 if user_scores['categories_count'] > 0:
                     user_scores['average_best_score'] = round(user_scores['total_best_score'] / user_scores['categories_count'])
-                    print(user_scores)
                 else:
                     user_scores['average_best_score'] = 0  # Handle case where user has no scores
 
@@ -491,4 +444,3 @@ class LeaderboardView(TemplateView):
         context['categories'] = categories
 
         return context
-
