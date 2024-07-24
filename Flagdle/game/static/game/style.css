@@ -51,7 +51,7 @@
     --img-box-shadow: 2px 5px 10px oklch(50% 0 0);
 }
 
-.dark-theme {
+.dark-mode {
     --background-color: oklch(15% 0.004 308.21);
     --background: linear-gradient(0deg, oklch(10% 0.004 308.21), oklch(15% 0.04 144));
     --header-color: oklch(20% 0.004 308.21);
@@ -79,7 +79,7 @@
     --img-box-shadow: 2px 5px 10px oklch(0% 0.004 308.21);
 }
 
-.light-theme {
+.light-mode {
     --background-color: oklch(90% 0.002 325.59);
     --background: linear-gradient(0deg, oklch(90% 0.002 325.59), oklch(90% 0.002 325.59));
     --header-color: oklch(90% 0.002 325.59);
@@ -451,8 +451,8 @@ button:not(#theme-switcher):active {
     opacity: 1;
 }
 
-.dark-theme-icon,
-.light-theme-icon {
+.dark-mode-icon,
+.light-mode-icon {
     cursor: pointer;
     height: 40px;
     width: 30px;
@@ -460,11 +460,11 @@ button:not(#theme-switcher):active {
     transform: rotate(0deg);
 }
 
-.light-theme-icon {
+.light-mode-icon {
     transform: translatex(-15px);
 }
 
-.dark-theme-icon {
+.dark-mode-icon {
     transform: translatex(15px);
 }
 

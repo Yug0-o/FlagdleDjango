@@ -1,10 +1,10 @@
-.dark-theme {
+.dark-mode {
     --text-secondary-color: oklch(89% 0 0);
     --container-background: oklch(20% 0.01 276.61);
     --container-border: var(--container-background);
 }
 
-.light-theme {
+.light-mode {
     --text-secondary-color: oklch(25% 0 0);
     --container-background: oklch(95% 0.01 286.37);
     --container-border: oklch(90% 0.01 286.37);

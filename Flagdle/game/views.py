@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, TemplateView, FormView
+from unidecode import unidecode
 
 from .forms import GuessForm, SignUpForm
 from .models import BestScore, CurrentScore
@@ -157,8 +158,11 @@ class GameView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
+        user_guess = unidecode(user_guess).replace('-', ' ')
+        
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
+        correct_answer_without_extension = unidecode(correct_answer_without_extension).replace('-', ' ')
 
         if user_guess == correct_answer_without_extension:
             message = "Correct!"

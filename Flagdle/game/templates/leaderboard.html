@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'game/leaderboard.css' %}">
     <script src="{% static 'js/global.js' %}" async></script>
 </head>
-<body>
+<body class="dark-mode">
     <header class="header" id="header">
         <h1 class="name clickable" onclick="location.href='{% url 'home' %}'"><a>Flagdle</a></h1>
         <div class="user-control">
@@ -30,7 +30,7 @@
                 {% endif %}
             </nav>
             <button id="theme-switcher" aria-label="theme switche">
-                <svg id="moon-icon" class="dark-theme-icon shown" xmlns="http://www.w3.org/2000/svg"
+                <svg id="moon-icon" class="dark-mode-icon shown" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256"
                     xml:space="preserve">
                     <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
@@ -41,7 +41,7 @@
                             transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
                     </g>
                 </svg>
-                <svg id="sun-icon" class="light-theme-icon hidden" xmlns="http://www.w3.org/2000/svg"
+                <svg id="sun-icon" class="light-mode-icon hidden" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="26" height="26" viewBox="0 0 256 256"
                     xml:space="preserve">
                     <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
