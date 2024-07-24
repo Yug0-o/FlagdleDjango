@@ -91,161 +91,31 @@ class FlagView(TemplateView):
         return context
 
 
-class CountryGameView(LoginRequiredMixin, FormView):
-    template_name = 'country_game.html'
+class GameView(LoginRequiredMixin, FormView):
+    template_name = 'game.html'
     login_url = 'login'  # URL to redirect if the user is not logged in
     form_class = GuessForm
-    success_url = reverse_lazy('country_game')
+    success_url = reverse_lazy('game')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-        selected_category = self.request.GET.get('category', categories[0])
-        images = get_from_directory("country", selected_category)
-
-        # Transform filenames
-        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
-
-        if not transformed_images:
-            context['message'] = 'No images found in this category.'
+    def get_game_settings(self):
+        game = self.request.GET.get('game', 'country')
+        if game == 'country':
+            categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
+            directory = 'country'
+        elif game == 'flag':
+            categories = ['World', 'Pride']
+            directory = 'flags'
         else:
-            context['categories'] = categories
-            context['selected_category'] = selected_category
-
-            # Get already shown images from the session
-            shown_images = self.request.session.get(f'shown_images_{selected_category}', [])
-            remaining_images = [img for img in transformed_images if img[0] not in shown_images]
-
-            if not remaining_images:
-                context['message'] = 'Congratulations! You have guessed all the images in this category.'
-                context['all_guessed'] = True
-                self.request.session[f'shown_images_{selected_category}'] = []
-            else:    
-                context['images'] = remaining_images
-                random_image = random.choice(remaining_images)
-                context['current_image'] = random_image[0]
-                context['correct_answer'] = random_image[1]
-
-        # Add the scores to the context
-        username = self.request.user
-
-        best_score, best_created = BestScore.objects.get_or_create(username=username)
-        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-        score_field_prefix = selected_category.lower().replace('-', '_')
-
-        # if the remaining_images is the same number as the max score, reset the current score
-        if len(remaining_images) == len(transformed_images):
-            setattr(current_score, f"{score_field_prefix}_current_score", 0)
-            current_score.save()
-        
-        context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
-        context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
-        return context
-
-    def form_valid(self, form):
-        user_guess = form.cleaned_data['guess'].strip().lower()
-
-        guesses = self.request.session.get('guesses', [])
-        if not guesses:
-            self.request.session['guesses'] = []
-            guesses = []
-
-        correct_answer = form.cleaned_data['correct_answer'].strip().lower()
-        correct_answer_without_extension = os.path.splitext(correct_answer)[0]
-
-        message = ""
-        score_increment = 0
-        if user_guess not in guesses:
-            if user_guess == correct_answer_without_extension:
-                message = "Correct!"
-                guesses.append(user_guess)
-                self.request.session['guesses'] = guesses
-                score_increment = 1
-            else:
-                if user_guess not in guesses:
-                    message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
-                score_increment = 0
-
-        # Update the user's score
-        username = self.request.user
-
-        categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
-
-        selected_category = self.request.GET.get('category', categories[0])
-
-        best_score, best_created = BestScore.objects.get_or_create(username=username)
-
-        current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-
-        score_field_prefix = selected_category.lower().replace('-', '_')
-
-        current_score_field = f"{score_field_prefix}_current_score"
-        best_score_field = f"{score_field_prefix}_best_score"
-
-        max_score = len(get_from_directory("country", selected_category))
-
-        current_score_val = getattr(current_score, current_score_field, 0)/100 * max_score
-
-        new_current_score = round(current_score_val + score_increment)
-        new_current_score_percentage = round(new_current_score/max_score * 100)
-
-        setattr(current_score, current_score_field, new_current_score_percentage)
-        current_score.save()
-
-        best_score_percentage = getattr(best_score, best_score_field, 0)
-        if new_current_score_percentage > best_score_percentage:
-            setattr(best_score, best_score_field, new_current_score_percentage)
-            best_score.save()
-
-        images = get_from_directory("country", selected_category)
-
-        # Transform filenames
-        transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
-
-        # Update shown images in the session
-        shown_images = self.request.session.get(f'shown_images_{selected_category}', [])
-        shown_images.append(form.cleaned_data['current_image'])
-        self.request.session[f'shown_images_{selected_category}'] = shown_images
-
-        remaining_images = [img for img in transformed_images if img[0] not in shown_images]
-
-        if not remaining_images:
-            self.request.session['guesses'] = []
-            message = 'Congratulations! You have guessed all the images in this category.'
-            self.request.session[f'shown_images_{selected_category}'] = []
-            context = self.get_context_data(
-                form=form,
-                categories=categories,
-                selected_category=selected_category,
-                message=message,
-                all_guessed=True
-            )
-        else:   
-            random_image = random.choice(remaining_images)
-            context = self.get_context_data(
-                form=form,
-                categories=categories,
-                selected_category=selected_category,
-                current_image=random_image[0],
-                correct_answer=random_image[1],
-                message=message,
-                all_guessed=False
-            )
-
-        return self.render_to_response(context)
-
-
-class FlagsGameView(LoginRequiredMixin, FormView):
-    template_name = 'flag_game.html'
-    login_url = 'login'  # URL to redirect if the user is not logged in
-    form_class = GuessForm
-    success_url = reverse_lazy('flag_game')
+            categories = []
+            directory = ''
+        return game, categories, directory
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = ['Pride', 'World']
-        selected_category = self.request.GET.get('category', categories[0])
-        images = get_from_directory("flags", selected_category)
+        game, categories, directory = self.get_game_settings()
+        selected_category = self.request.GET.get('category', categories[0] if categories else '')
+
+        images = get_from_directory(directory, selected_category)
 
         # Transform filenames
         transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
@@ -269,6 +139,7 @@ class FlagsGameView(LoginRequiredMixin, FormView):
                 random_image = random.choice(remaining_images)
                 context['current_image'] = random_image[0]
                 context['correct_answer'] = random_image[1]
+                context['all_guessed'] = False
 
         # Add the scores to the context
         username = self.request.user
@@ -277,71 +148,46 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
         score_field_prefix = selected_category.lower().replace('-', '_')
 
-        # if the remaining_images is the same number as the max score, reset the current score
-        if len(remaining_images) == len(transformed_images):
-            setattr(current_score, f"{score_field_prefix}_current_score", 0)
-            current_score.save()
-
         context['current_score'] = getattr(current_score, f"{score_field_prefix}_current_score", 0)
         context['best_score'] = getattr(best_score, f"{score_field_prefix}_best_score", 0)
+        context['game'] = game
         return context
 
     def form_valid(self, form):
         user_guess = form.cleaned_data['guess'].strip().lower()
-
-        guesses = self.request.session.get('guesses', [])
-        if not guesses:
-            self.request.session['guesses'] = []
-            guesses = []
-
         correct_answer = form.cleaned_data['correct_answer'].strip().lower()
         correct_answer_without_extension = os.path.splitext(correct_answer)[0]
 
-        message = ""
-        score_increment = 0
-        if user_guess not in guesses:
-            if user_guess == correct_answer_without_extension:
-                score_increment = 1
-                message = "Correct!"
-                guesses.append(user_guess)
-                self.request.session['guesses'] = guesses
-            else:
-                if user_guess not in guesses:
-                    message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
-                score_increment = 0
+        if user_guess == correct_answer_without_extension:
+            message = "Correct!"
+            score_increment = 1
+        else:
+            message = f"Incorrect. The correct answer was {correct_answer_without_extension}."
+            score_increment = 0
 
         # Update the user's score
         username = self.request.user
-
-        categories = ['Pride', 'World']
-
-        selected_category = self.request.GET.get('category', categories[0])
+        game, categories, directory = self.get_game_settings()
+        selected_category = self.request.GET.get('category', categories[0] if categories else '')
 
         best_score, best_created = BestScore.objects.get_or_create(username=username)
-
         current_score, current_created = CurrentScore.objects.get_or_create(username=username)
-
         score_field_prefix = selected_category.lower().replace('-', '_')
 
         current_score_field = f"{score_field_prefix}_current_score"
         best_score_field = f"{score_field_prefix}_best_score"
 
-        max_score = len(get_from_directory("flags", selected_category))
-
-        current_score_val = getattr(current_score, current_score_field, 0) / 100 * max_score  # return 0.0, not normal
-
-        new_current_score = round(current_score_val + score_increment)
-        new_current_score_percentage = round(new_current_score / max_score * 100)
-
-        setattr(current_score, current_score_field, new_current_score_percentage)
+        current_score_val = getattr(current_score, current_score_field, 0)
+        new_current_score = current_score_val + score_increment
+        setattr(current_score, current_score_field, new_current_score)
         current_score.save()
 
-        best_score_percentage = getattr(best_score, best_score_field, 0)
-        if new_current_score_percentage > best_score_percentage:
-            setattr(best_score, best_score_field, new_current_score_percentage)
+        best_score_val = getattr(best_score, best_score_field, 0)
+        if new_current_score > best_score_val:
+            setattr(best_score, best_score_field, new_current_score)
             best_score.save()
 
-        images = get_from_directory("flags", selected_category)
+        images = get_from_directory(directory, selected_category)
 
         # Transform filenames
         transformed_images = [(image, base32_to_utf8(filename)) for image, filename in images]
@@ -354,7 +200,6 @@ class FlagsGameView(LoginRequiredMixin, FormView):
         remaining_images = [img for img in transformed_images if img[0] not in shown_images]
 
         if not remaining_images:
-            self.request.session['guesses'] = []
             message = 'Congratulations! You have guessed all the images in this category.'
             self.request.session[f'shown_images_{selected_category}'] = []
             context = self.get_context_data(
@@ -377,7 +222,6 @@ class FlagsGameView(LoginRequiredMixin, FormView):
             )
 
         return self.render_to_response(context)
-
 
 # file deepcode ignore DisablesCSRFProtection: <not a security issue>
 @csrf_exempt

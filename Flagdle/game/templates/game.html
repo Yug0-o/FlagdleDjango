@@ -87,52 +87,52 @@
         </div>
     </header>
     <div class="game">
-        <p>Current score in {{ selected_category }}: {{ current_score }}%</p>
-        <p>Best score in {{ selected_category }}: {{ best_score }}%</p>
-        <form method="get" action="" class="game_control">
-            <label for="category">Choose a category:</label>
-            <select name="category" id="category" onchange="this.form.submit()">
-                {% for category in categories %}
-                    <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
-                {% endfor %}
-            </select>
+    <p>Current score in {{ selected_category }}: {{ current_score }}</p>
+    <p>Best score in {{ selected_category }}: {{ best_score }}</p>
+    <form method="get" action="" class="game_control">
+        <label for="category">Choose a category:</label>
+        <select name="category" id="category" onchange="this.form.submit()">
+            {% for category in categories %}
+                <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if message %}
+        <p id="message">{{ message }}</p>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var messageElement = document.getElementById('message');
+                if (messageElement.textContent.includes("Correct")) {
+                    messageElement.classList.add('success');
+                } else {
+                    messageElement.classList.add('error');
+                }
+            });
+        </script>
+    {% endif %}
+
+    {% if all_guessed %}
+        <div class="victory-message">
+            <p>Congratulations! You have guessed all the images in this category.</p>
+            <button onclick="window.location.href='{% url 'game' %}?game={{ game }}&category={{ selected_category }}'">Continue Playing</button>
+            <button onclick="window.location.href='/'">Go to Homepage</button>
+        </div>
+    {% else %}
+        <div class="image-game">
+            <img src="{% static current_image %}" alt="Guess the title" onContextMenu="return false;">
+        </div>
+
+        <form method="post" action="" class="game_control">
+            {% csrf_token %}
+            <input type="hidden" name="current_image" value="{{ current_image }}">
+            <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+            <label for="guess">Your Guess:</label>
+            <input type="text" name="guess" id="guess" required>
+            <button type="submit">Submit</button>
         </form>
-
-        {% if message %}
-            <p id="message">{{ message }}</p>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    var messageElement = document.getElementById('message');
-                    if (messageElement.textContent.includes("Correct")) {
-                        messageElement.classList.add('success');
-                    } else {
-                        messageElement.classList.add('error');
-                    }
-                });
-            </script>
-        {% endif %}
-
-        {% if all_guessed %}
-            <div class="victory-message">
-                <p>Congratulations! You have guessed all the images in this category.</p>
-                <button onclick="window.location.href='{% url 'country_game' %}?category={{ selected_category }}'">Continue Playing</button>
-                <button onclick="window.location.href='/Flagdle/'">Go to Homepage</button>
-            </div>
-        {% else %}
-            <div class="image-game">
-                <img src="{% static current_image %}" alt="Guess the title" onContextMenu="return false;">
-            </div>
-
-            <form method="post" action="" class="game_control">
-                {% csrf_token %}
-                <input type="hidden" name="current_image" value="{{ current_image }}">
-                <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-                <label for="guess">Your Guess:</label>
-                <input type="text" name="guess" id="guess" required>
-                <button type="submit">Submit</button>
-            </form>
-        {% endif %}
+    {% endif %}
     </div>
 </body>
 </html>
