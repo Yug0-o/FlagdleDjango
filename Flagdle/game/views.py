@@ -98,7 +98,8 @@ class GameView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('game')
 
     def get_game_settings(self):
-        game = self.request.GET.get('game', 'country')
+        game = self.request.GET.get('game')
+        print(game)
         if game == 'country':
             categories = ['Afrique', 'Amerique', 'Asie', 'Europe', 'Moyen-Orient', 'Oceanie']
             directory = 'country'
@@ -113,6 +114,7 @@ class GameView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         game, categories, directory = self.get_game_settings()
+        print(game, categories, directory)
         selected_category = self.request.GET.get('category', categories[0] if categories else '')
 
         images = get_from_directory(directory, selected_category)

@@ -36,7 +36,8 @@
             <div class="game_grid" id="game_grid">
                 <h2>COUNTRYDLE</h2>
                 {% for category in categories %}
-                    <form class="game_button" action="{% url 'game' %}?game=country" method="get">
+                    <form class="game_button" action="{% url 'game' %}" method="get">
+                        <input type="hidden" name="game" value="country">
                         <input type="hidden" name="category" value="{{ category }}">
                         <button type="submit">
                             <img src="/static/country/{{category}}/icon.webp" alt="{{ category }}">
@@ -50,7 +51,8 @@
             <div class="game_grid" id="game_grid">
                 <h2>FLAGDLE</h2>
                     {% for category in flag_categories %}
-                        <form class="game_button" action="{% url 'game' %}?game=flag" method="get">
+                        <form class="game_button" action="{% url 'game' %}" method="get">
+                            <input type="hidden" name="game" value="flag">
                             <input type="hidden" name="category" value="{{ category }}">
                             <button type="submit">
                                 <img src="/static/flags/{{category}}/icon.webp" alt="{{ category }}">
